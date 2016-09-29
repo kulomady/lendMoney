@@ -5,5 +5,5 @@ package com.arm.hackbri.landmoney.presenter;
  */
 public interface HutangListPresenter {
 
-
+    void processFetchHutangList();
 }
