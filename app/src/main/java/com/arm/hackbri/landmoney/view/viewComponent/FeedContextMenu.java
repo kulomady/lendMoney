@@ -9,10 +9,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.arm.hackbri.landmoney.R;
 import com.arm.hackbri.landmoney.Utils;
-
-/**
- * Created by froger_mcs on 15.12.14.
- */
 public class FeedContextMenu extends LinearLayout {
     private static final int CONTEXT_MENU_WIDTH = Utils.dpToPx(240);
 

@@ -21,9 +21,6 @@ import com.arm.hackbri.landmoney.R;
 import com.arm.hackbri.landmoney.view.activity.MainActivity;
 import com.arm.hackbri.landmoney.view.viewComponent.LoadingFeedItemView;
 
-/**
- * Created by froger_mcs on 05.11.14.
- */
 public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public static final String ACTION_LIKE_BUTTON_CLICKED = "action_like_button_button";
     public static final String ACTION_LIKE_IMAGE_CLICKED = "action_like_image_button";

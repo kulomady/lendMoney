@@ -18,9 +18,6 @@ import butterknife.Bind;
 import com.arm.hackbri.landmoney.R;
 import com.arm.hackbri.landmoney.view.utils.RoundedTransformation;
 
-/**
- * Created by froger_mcs on 11.11.14.
- */
 public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;

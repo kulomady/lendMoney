@@ -22,9 +22,6 @@ import butterknife.Bind;
 import com.arm.hackbri.landmoney.R;
 import com.arm.hackbri.landmoney.Utils;
 
-/**
- * Created by Miroslaw Stanek on 20.01.15.
- */
 public class UserProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int PHOTO_ANIMATION_DELAY = 600;
