@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "903247255478",
+    "firebase_url": "https://hack-bri.firebaseio.com",
+    "project_id": "hack-bri",
+    "storage_bucket": "hack-bri.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:903247255478:android:2340a69c65641b19",
+        "android_client_info": {
+          "package_name": "com.arm.hackbri.landmoney"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "903247255478-1nhm0fc07d2aht5q8es47q6ldbf75vgh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.arm.hackbri.landmoney",
+            "certificate_hash": "6D35E8A08951F308D1F55C50B7D863CEB9E35B13"
+          }
+        },
+        {
+          "client_id": "903247255478-f3glvv1ld62des1q41c09rfuu67n0g0q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVs-DwK7F8uYoWDtnGyxGgcvVfK7XPuUM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "903247255478-f3glvv1ld62des1q41c09rfuu67n0g0q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

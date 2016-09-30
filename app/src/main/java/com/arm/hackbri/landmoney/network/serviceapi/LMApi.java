@@ -23,16 +23,16 @@ public interface LMApi {
     @POST(LMEndpointURL.PATH_LOGIN)
     Observable<LMResponse> login(@FieldMap Map<String, String> params);
 
-    @GET(LMEndpointURL.PATH_GET_DETAIL_HUTANG)
-    Observable<LMResponse> getHutangList(@QueryMap Map<String, String> params);
+    @GET(LMEndpointURL.PATH_GET_DEBIT_LIST)
+    Observable<LMResponse> getDebitList(@QueryMap Map<String, String> params);
 
-    @GET(LMEndpointURL.PATH_GET_PINJAMAN_LIST)
-    Observable<LMResponse> getPinjamanList(@QueryMap Map<String, String> params);
+    @GET(LMEndpointURL.PATH_GET_CREDIT_LIST)
+    Observable<LMResponse> getCreditList(@QueryMap Map<String, String> params);
 
-    @GET(LMEndpointURL.PATH_GET_DETAIL_PINJAMAN)
+    @GET(LMEndpointURL.PATH_GET_CREDIT_LIST)
     Observable<LMResponse> getDetailPinjaman(@QueryMap Map<String, String> params);
 
-    @GET(LMEndpointURL.PATH_GET_DETAIL_HUTANG)
+    @GET(LMEndpointURL.PATH_GET_CREDIT_LIST)
     Observable<LMResponse> getDetailHutang(@QueryMap Map<String, String> params);
 
     @GET(LMEndpointURL.PATH_REDEEM_LIST)
