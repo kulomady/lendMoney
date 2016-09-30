@@ -1,5 +1,6 @@
 package com.arm.hackbri.landmoney.view;
 
+import com.arm.hackbri.landmoney.model.response.Credit;
 import com.arm.hackbri.landmoney.model.response.Debit;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public interface CreditListView {
 
     void dismissProgressFetchCreditList();
 
-    void renderCreditListDatas(List<Debit> debitList);
+    void renderCreditListDatas(List<Credit> debitList);
 
     void renderErrorServerFetchData(String messageError);
 
@@ -24,4 +25,6 @@ public interface CreditListView {
     void renderErrorConnection(String messageError);
 
     void renderErrorUnknown(String messageError);
+
+    void renderUserNotLogin();
 }
