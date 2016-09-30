@@ -9,10 +9,10 @@
             android:icon="@drawable/ic_global_menu_direct"
             android:title="Daftar Tagihan" />
 
-        <item
-            android:id="@+id/menu_redeem"
-            android:icon="@drawable/ic_global_menu_popular"
-            android:title="Redeem" />
+        <!--<item-->
+            <!--android:id="@+id/menu_redeem"-->
+            <!--android:icon="@drawable/ic_global_menu_popular"-->
+            <!--android:title="Redeem" />-->
 
     </group>
     <group android:id="@+id/menu_group_2">

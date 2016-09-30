@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import com.arm.hackbri.landmoney.R;
 import com.arm.hackbri.landmoney.model.response.Profile;
+import com.arm.hackbri.landmoney.presenter.LoginPresenter;
+import com.arm.hackbri.landmoney.presenter.LoginPresenterImpl;
 import com.arm.hackbri.landmoney.view.LoginView;
 
 import butterknife.Bind;
@@ -28,11 +30,14 @@ public class LoginActivity extends Activity implements LoginView {
     @Bind(R.id.input_password)
     EditText edtPassword;
 
+    LoginPresenter loginPresenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+        this.loginPresenter = new LoginPresenterImpl(this);
 
     }
 
@@ -47,8 +52,8 @@ public class LoginActivity extends Activity implements LoginView {
     }
 
     @Override
-    public void renderProfileData(Profile data) {
-
+    public void renderProfileData(Profile profile) {
+        CreditActivity.openActivity(this, profile);
     }
 
     @Override
@@ -83,7 +88,7 @@ public class LoginActivity extends Activity implements LoginView {
 
     @OnClick(R.id.btnLogin)
     void doLogin() {
-
+        loginPresenter.processPostLogin(this);
     }
 
     @OnClick(R.id.btnSignup)

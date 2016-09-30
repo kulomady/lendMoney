@@ -59,7 +59,8 @@
                             android:id="@+id/ivUserProfilePhoto"
                             android:layout_width="@dimen/user_profile_avatar_size"
                             android:layout_height="@dimen/user_profile_avatar_size"
-                            android:layout_marginRight="16dp" />
+                            android:layout_marginRight="16dp"
+                            />
 
                         <LinearLayout
                             android:id="@+id/vUserDetails"
@@ -190,14 +191,16 @@
                     app:layout_scrollFlags="scroll|enterAlways"
                     app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-                    <ImageView
+                    <TextView
                         android:id="@+id/ivLogo"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
+                        android:gravity="center"
                         android:scaleType="center"
+                        android:textStyle="bold"
                         android:visibility="visible"
-                        android:src="@drawable/img_toolbar_logo" />
+                        android:text="@string/app_name" />
                 </android.support.v7.widget.Toolbar>
 
             </android.support.design.widget.CollapsingToolbarLayout>
