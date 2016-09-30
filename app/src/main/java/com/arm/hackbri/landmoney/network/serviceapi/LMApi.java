@@ -5,6 +5,7 @@ import com.arm.hackbri.landmoney.network.LMResponse;
 
 import java.util.Map;
 
+import retrofit.Response;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
@@ -23,11 +24,29 @@ public interface LMApi {
     @POST(LMEndpointURL.PATH_LOGIN)
     Observable<LMResponse> login(@FieldMap Map<String, String> params);
 
+    @FormUrlEncoded
+    @POST(LMEndpointURL.PATH_LOGIN)
+    Observable<Response> transfer(@FieldMap Map<String, String> params);
+
+    @FormUrlEncoded
+    @POST(LMEndpointURL.PATH_GET_TBANK_SALDO)
+    Observable<LMResponse> getTBankSaldo(@FieldMap Map<String, String> params);
+
     @GET(LMEndpointURL.PATH_GET_DEBIT_LIST)
     Observable<LMResponse> getDebitList(@QueryMap Map<String, String> params);
 
     @GET(LMEndpointURL.PATH_GET_CREDIT_LIST)
     Observable<LMResponse> getCreditList(@QueryMap Map<String, String> params);
+
+    @GET(LMEndpointURL.PATH_GET_DIALOG_NEW_CREDIT)
+    Observable<LMResponse> getDialogNewCredit(@QueryMap Map<String, String> params);
+
+    @GET(LMEndpointURL.PATH_GET_DIALOG_NEW_DEBIT)
+    Observable<LMResponse> getDialogNewDebit(@QueryMap Map<String, String> params);
+
+    @FormUrlEncoded
+    @POST(LMEndpointURL.PATH_GET_CREDIT_LIST)
+    Observable<LMResponse> generateToken(@FieldMap Map<String, String> params);
 
     @GET(LMEndpointURL.PATH_GET_CREDIT_LIST)
     Observable<LMResponse> getDetailPinjaman(@QueryMap Map<String, String> params);

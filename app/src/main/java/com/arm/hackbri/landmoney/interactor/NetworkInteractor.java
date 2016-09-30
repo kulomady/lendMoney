@@ -4,6 +4,7 @@ import com.arm.hackbri.landmoney.model.ParamNetwork;
 import com.arm.hackbri.landmoney.model.response.Credit;
 import com.arm.hackbri.landmoney.model.response.Debit;
 import com.arm.hackbri.landmoney.model.response.Profile;
+import com.arm.hackbri.landmoney.model.response.TBankSaldo;
 
 import java.util.List;
 
@@ -16,9 +17,18 @@ public interface NetworkInteractor {
 
     void getCreditList(ParamNetwork paramNetwork, OnFetchDataListener<List<Credit>> onFetchDataListener);
 
-    void getListRedeem(ParamNetwork paramNetwork, OnFetchDataListener<?> onFetchDataListener);
-
     void login(ParamNetwork paramNetwork, OnFetchDataListener<Profile> onFetchDataListener);
+
+    void getTBankSaldo(ParamNetwork paramNetwork, OnFetchDataListener<TBankSaldo> onFetchDataListener);
+
+    void transfer(ParamNetwork paramNetwork, OnFetchDataListener<TBankSaldo> onFetchDataListener);
+
+    void getDialogNewDebit(ParamNetwork paramNetwork, OnFetchDataListener<Profile> onFetchDataListener);
+
+    void getDialogNewCredit(ParamNetwork paramNetwork, OnFetchDataListener<Profile> onFetchDataListener);
+
+
+    void getListRedeem(ParamNetwork paramNetwork, OnFetchDataListener<?> onFetchDataListener);
 
     void getDebitDetail(ParamNetwork paramNetwork, OnFetchDataListener<?> onFetchDataListener);
 
