@@ -108,6 +108,11 @@ public class CreateDebitActivity extends BaseActivity implements CreateDebitView
         return Integer.parseInt(edtAmount.getText().toString());
     }
 
+    @Override
+    public String getDescription() {
+        return null;
+    }
+
 
     private void showMessage(String messageError) {
         Toast.makeText(this, messageError, Toast.LENGTH_SHORT).show();

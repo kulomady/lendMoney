@@ -19,6 +19,12 @@ public interface NetworkInteractor {
 
     void login(ParamNetwork paramNetwork, OnFetchDataListener<Profile> onFetchDataListener);
 
+    void register(ParamNetwork paramNetwork, OnFetchDataListener<Profile> onFetchDataListener);
+
+    void createNewCredit(ParamNetwork paramNetwork, OnFetchDataListener<Object> onFetchDataListener);
+
+    void createNewDebit(ParamNetwork paramNetwork, OnFetchDataListener<Object> onFetchDataListener);
+
     void getTBankSaldo(ParamNetwork paramNetwork, OnFetchDataListener<TBankSaldo> onFetchDataListener);
 
     void transfer(ParamNetwork paramNetwork, OnFetchDataListener<TBankSaldo> onFetchDataListener);

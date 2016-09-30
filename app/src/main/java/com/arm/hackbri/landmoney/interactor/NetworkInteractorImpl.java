@@ -15,6 +15,7 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
+import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -84,6 +85,62 @@ public class NetworkInteractorImpl implements NetworkInteractor {
     @Override
     public void login(ParamNetwork paramNetwork, final OnFetchDataListener<Profile> onFetchDataListener) {
         compositeSubscription.add(LMService.getInstance().getApi().login(paramNetwork.getParamMap())
+                .map(new Func1<LMResponse, Profile>() {
+                    @Override
+                    public Profile call(LMResponse lmResponse) {
+                        return lmResponse.convertDataObj(Profile.class);
+                    }
+                })
+                .flatMap(new Func1<Profile, Observable<Profile>>() {
+                    @Override
+                    public Observable<Profile> call(Profile profile) {
+                        ParamNetwork.Builder builder = new ParamNetwork.Builder();
+                        builder.put("user_id", profile.getUserId() + "");
+                        return Observable.zip(Observable.just(profile),
+                                LMService.getInstance().getApi().getTBankSaldo(builder.build().getParamMap()),
+                                new Func2<Profile, LMResponse, Profile>() {
+                                    @Override
+                                    public Profile call(Profile profile, LMResponse lmResponse) {
+                                        TBankSaldo tBankSaldo = lmResponse.convertDataObj(TBankSaldo.class);
+                                        profile.settBankSaldo(tBankSaldo);
+                                        return profile;
+                                    }
+                                });
+                    }
+                })
+                .subscribeOn(Schedulers.newThread())
+                .unsubscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Profile>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        onFetchDataListener.onFailedFetchData(e);
+                    }
+
+                    @Override
+                    public void onNext(Profile profile) {
+                        onFetchDataListener.onSuccessFetchData(profile);
+                    }
+                }));
+    }
+
+    @Override
+    public void register(final ParamNetwork paramNetwork, final OnFetchDataListener<Profile> onFetchDataListener) {
+        compositeSubscription.add(LMService.getInstance().getApi().register(paramNetwork.getParamMap())
+                .flatMap(new Func1<LMResponse, Observable<LMResponse>>() {
+                    @Override
+                    public Observable<LMResponse> call(LMResponse lmResponse) {
+                        if (lmResponse.getJsonData().getAsJsonObject().get("success").getAsInt() == 1)
+                            return LMService.getInstance().getApi().login(paramNetwork.getParamMap());
+                        else
+                            throw new RuntimeException("Registrasi gagal");
+                    }
+                })
                 .subscribeOn(Schedulers.newThread())
                 .unsubscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -101,6 +158,54 @@ public class NetworkInteractorImpl implements NetworkInteractor {
                     @Override
                     public void onNext(LMResponse lmResponse) {
                         onFetchDataListener.onSuccessFetchData(lmResponse.convertDataObj(Profile.class));
+                    }
+                }));
+    }
+
+    @Override
+    public void createNewCredit(ParamNetwork paramNetwork, final OnFetchDataListener<Object> onFetchDataListener) {
+        compositeSubscription.add(LMService.getInstance().getApi().createCredit(paramNetwork.getParamMap())
+                .subscribeOn(Schedulers.newThread())
+                .unsubscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<LMResponse>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        onFetchDataListener.onFailedFetchData(e);
+                    }
+
+                    @Override
+                    public void onNext(LMResponse lmResponse) {
+                        onFetchDataListener.onSuccessFetchData(lmResponse.convertDataObj(TBankSaldo.class));
+                    }
+                }));
+    }
+
+    @Override
+    public void createNewDebit(ParamNetwork paramNetwork, final OnFetchDataListener<Object> onFetchDataListener) {
+        compositeSubscription.add(LMService.getInstance().getApi().createDebit(paramNetwork.getParamMap())
+                .subscribeOn(Schedulers.newThread())
+                .unsubscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<LMResponse>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        onFetchDataListener.onFailedFetchData(e);
+                    }
+
+                    @Override
+                    public void onNext(LMResponse lmResponse) {
+                        onFetchDataListener.onSuccessFetchData(lmResponse.convertDataObj(TBankSaldo.class));
                     }
                 }));
     }

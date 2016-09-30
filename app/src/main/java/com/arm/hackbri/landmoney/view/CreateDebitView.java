@@ -14,6 +14,9 @@ public interface CreateDebitView {
     void renderErrorUnknown(String messageError);
 
     String getPhoneNumber();
+
     int getAmount();
+
+    String getDescription();
 
 }
