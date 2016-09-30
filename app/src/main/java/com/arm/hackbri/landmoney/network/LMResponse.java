@@ -22,6 +22,7 @@ public class LMResponse {
     private String stringData;
     private JsonElement jsonData;
     private String token;
+    private Object objData;
 
     private Gson gson = new GsonBuilder().disableHtmlEscaping()
             .setPrettyPrinting().create();
@@ -116,5 +117,20 @@ public class LMResponse {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T convertDataObj(Class<T> clazz) {
+        if (objData == null) {
+            try {
+                this.objData = gson.fromJson(stringData, clazz);
+                return (T) objData;
+            } catch (ClassCastException e) {
+                e.printStackTrace();
+                return null;
+            }
+        } else {
+            return (T) objData;
+        }
     }
 }
