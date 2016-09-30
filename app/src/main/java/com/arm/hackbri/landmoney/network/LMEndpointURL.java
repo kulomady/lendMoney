@@ -21,7 +21,7 @@ public interface LMEndpointURL {
     String PATH_INVITE = "invite";
     String PATH_ACCEPT_DEBIT = "acceptdebt";
     String PATH_FCM_TOKEN = "fcm";
-    String PATH_GET_DEPOSIT = "";
+    String PATH_BILL = "bill";
     String PATH_REDEEM_LIST = "";
     String PATH_TOKEN = "bri/bri/tbank/token";
     String PATH_TRANSFER = "bri/tbank/transfer";
