@@ -72,6 +72,10 @@ public interface LMApi {
     @POST(LMEndpointURL.PATH_ACCEPT_DEBIT)
     Observable<LMResponse> acceptDebit(@FieldMap Map<String, String> params);
 
+    @FormUrlEncoded
+    @POST(LMEndpointURL.PATH_FCM_TOKEN)
+    Observable<Response> postFCMToken(@FieldMap Map<String, String> params);
+
     //======================================
     //BUSUK GAK KEPAKE
     //=======================================

@@ -41,6 +41,8 @@ public interface NetworkInteractor {
 
     void getDialogNewCredit(ParamNetwork paramNetwork, OnFetchDataListener<Profile> onFetchDataListener);
 
+    void postFCMToken(ParamNetwork paramNetwork);
+
 
     void getListRedeem(ParamNetwork paramNetwork, OnFetchDataListener<?> onFetchDataListener);
 

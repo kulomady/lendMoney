@@ -20,6 +20,7 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
+import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -103,17 +104,17 @@ public class NetworkInteractorImpl implements NetworkInteractor {
                         TBankSaldo saldo = new TBankSaldo();
                         saldo.setSaldo("100000");
                         profile.settBankSaldo(saldo);
-                        return Observable.just(profile);
-//                        return Observable.zip(Observable.just(profile),
-//                                LMService.getInstance().getApi().getTBankSaldo(builder.build().getParamMap()),
-//                                new Func2<Profile, LMResponse, Profile>() {
-//                                    @Override
-//                                    public Profile call(Profile profile, LMResponse lmResponse) {
-//                                        TBankSaldo tBankSaldo = lmResponse.convertDataObj(TBankSaldo.class);
-//                                        profile.settBankSaldo(tBankSaldo);
-//                                        return profile;
-//                                    }
-//                                });
+                        //  return Observable.just(profile);
+                        return Observable.zip(Observable.just(profile),
+                                LMService.getInstance().getApi().getTBankSaldo(builder.build().getParamMap()),
+                                new Func2<Profile, LMResponse, Profile>() {
+                                    @Override
+                                    public Profile call(Profile profile, LMResponse lmResponse) {
+                                        TBankSaldo tBankSaldo = lmResponse.convertDataObj(TBankSaldo.class);
+                                        profile.settBankSaldo(tBankSaldo);
+                                        return profile;
+                                    }
+                                });
                     }
                 })
                 .subscribeOn(Schedulers.newThread())
@@ -391,6 +392,15 @@ public class NetworkInteractorImpl implements NetworkInteractor {
                         onFetchDataListener.onSuccessFetchData(lmResponse.convertDataObj(Profile.class));
                     }
                 }));
+    }
+
+    @Override
+    public void postFCMToken(ParamNetwork paramNetwork) {
+        compositeSubscription.add(LMService.getInstance().getApi().postFCMToken(paramNetwork.getParamMap())
+                .subscribeOn(Schedulers.newThread())
+                .unsubscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe());
     }
 
 
