@@ -21,6 +21,10 @@ public class ParamNetwork {
         return paramMap;
     }
 
+    public void put(@NonNull String key, @NonNull String value) {
+        paramMap.put(key, value);
+    }
+
     public static final class Builder {
         private Map<String, String> paramMap;
 

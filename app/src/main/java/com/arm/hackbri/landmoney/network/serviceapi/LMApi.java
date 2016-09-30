@@ -25,7 +25,11 @@ public interface LMApi {
     Observable<LMResponse> login(@FieldMap Map<String, String> params);
 
     @FormUrlEncoded
-    @POST(LMEndpointURL.PATH_LOGIN)
+    @POST(LMEndpointURL.PATH_REGISTER)
+    Observable<LMResponse> register(@FieldMap Map<String, String> params);
+
+    @FormUrlEncoded
+    @POST(LMEndpointURL.PATH_TRANSFER)
     Observable<Response> transfer(@FieldMap Map<String, String> params);
 
     @FormUrlEncoded
@@ -47,6 +51,15 @@ public interface LMApi {
     @FormUrlEncoded
     @POST(LMEndpointURL.PATH_GET_CREDIT_LIST)
     Observable<LMResponse> generateToken(@FieldMap Map<String, String> params);
+
+    @FormUrlEncoded
+    @POST(LMEndpointURL.PATH_CREATE_DEBIT)
+    Observable<LMResponse> createDebit(@FieldMap Map<String, String> params);
+
+    @FormUrlEncoded
+    @POST(LMEndpointURL.PATH_CREATE_CREDIT)
+    Observable<LMResponse> createCredit(@FieldMap Map<String, String> params);
+
 
     @GET(LMEndpointURL.PATH_GET_CREDIT_LIST)
     Observable<LMResponse> getDetailPinjaman(@QueryMap Map<String, String> params);

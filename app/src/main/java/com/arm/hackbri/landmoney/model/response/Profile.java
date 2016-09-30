@@ -48,6 +48,7 @@ public class Profile implements Parcelable {
     @SerializedName("user_rek")
     @Expose
     private String userRek;
+    private TBankSaldo tBankSaldo;
 
     public Integer getUserId() {
         return userId;
@@ -146,6 +147,17 @@ public class Profile implements Parcelable {
     }
 
 
+    public Profile() {
+    }
+
+    public TBankSaldo gettBankSaldo() {
+        return tBankSaldo;
+    }
+
+    public void settBankSaldo(TBankSaldo tBankSaldo) {
+        this.tBankSaldo = tBankSaldo;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -165,9 +177,7 @@ public class Profile implements Parcelable {
         dest.writeString(this.userEmail);
         dest.writeString(this.userPin);
         dest.writeString(this.userRek);
-    }
-
-    public Profile() {
+        dest.writeParcelable(this.tBankSaldo, flags);
     }
 
     protected Profile(Parcel in) {
@@ -183,9 +193,10 @@ public class Profile implements Parcelable {
         this.userEmail = in.readString();
         this.userPin = in.readString();
         this.userRek = in.readString();
+        this.tBankSaldo = in.readParcelable(TBankSaldo.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<Profile> CREATOR = new Parcelable.Creator<Profile>() {
+    public static final Creator<Profile> CREATOR = new Creator<Profile>() {
         @Override
         public Profile createFromParcel(Parcel source) {
             return new Profile(source);
