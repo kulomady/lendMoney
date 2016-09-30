@@ -10,16 +10,15 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
-import android.widget.Button;
 import android.widget.ImageView;
 
-import com.squareup.picasso.Picasso;
-
-import butterknife.Bind;
 import com.arm.hackbri.landmoney.R;
 import com.arm.hackbri.landmoney.view.adapter.UserProfileAdapter;
 import com.arm.hackbri.landmoney.view.utils.CircleTransformation;
 import com.arm.hackbri.landmoney.view.viewComponent.RevealBackgroundView;
+import com.squareup.picasso.Picasso;
+
+import butterknife.Bind;
 
 public class UserProfileActivity extends BaseDrawerActivity implements RevealBackgroundView.OnStateChangeListener {
     public static final String ARG_REVEAL_START_LOCATION = "reveal_start_location";
@@ -39,8 +38,6 @@ public class UserProfileActivity extends BaseDrawerActivity implements RevealBac
     ImageView ivUserProfilePhoto;
     @Bind(R.id.vUserDetails)
     View vUserDetails;
-    @Bind(R.id.btnFollow)
-    Button btnFollow;
     @Bind(R.id.vUserStats)
     View vUserStats;
     @Bind(R.id.vUserProfileRoot)

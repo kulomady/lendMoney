@@ -8,6 +8,7 @@
 package com.arm.hackbri.landmoney.view.activity;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.EditText;
@@ -31,6 +32,7 @@ public class LoginActivity extends Activity implements LoginView {
     EditText edtPassword;
 
     LoginPresenter loginPresenter;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,17 +40,18 @@ public class LoginActivity extends Activity implements LoginView {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         this.loginPresenter = new LoginPresenterImpl(this);
-
+        this.progressDialog = new ProgressDialog(this);
+        this.progressDialog.setMessage("Please Wait");
     }
 
     @Override
     public void showProgressFetchCreditList() {
-
+        this.progressDialog.show();
     }
 
     @Override
     public void dismissProgressFetchCreditList() {
-
+        this.progressDialog.dismiss();
     }
 
     @Override

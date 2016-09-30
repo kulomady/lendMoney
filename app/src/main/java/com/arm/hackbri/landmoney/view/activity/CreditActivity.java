@@ -77,7 +77,10 @@ public class CreditActivity extends BaseDrawerActivity implements CreditAdapter.
         creditListPresenter = new CreditListPresenterImpl(this);
         creditListPresenter.processFetchCreditList(this);
 
-        setSaldo("150.000");
+        if(profile !=null) {
+            setSaldo("Rp." + String.valueOf(profile.gettBankSaldo()));
+            setUsernameText(profile.getUserName());
+        }
         if (savedInstanceState == null) {
             pendingIntroAnimation = true;
         } else {
