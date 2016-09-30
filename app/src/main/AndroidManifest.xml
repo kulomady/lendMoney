@@ -67,7 +67,27 @@
         <activity
             android:name=".view.activity.RegisterActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
+
+        <service
+            android:name=".services.LOMFCMListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                <!-- <action android:name="com.google.android.c2dm.intent.RECEIVE" /> -->
+            </intent-filter>
+        </service>
+        <service
+            android:name=".services.LOMInstanceIDListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+                <!-- <action android:name="com.google.android.gms.iid.InstanceID" /> -->
+            </intent-filter>
+        </service>
+        <service
+            android:name=".services.RegistrationIDIntentService"
+            android:exported="false" />
     </application>
 
 </manifest>

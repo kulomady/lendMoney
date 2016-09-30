@@ -42,6 +42,9 @@ public class LoginPresenterImpl implements LoginPresenter {
                 viewListener.dismissProgressFetchCreditList();
                 viewListener.renderProfileData(data);
                 preferencesInteractor.storeUserData(activity, data);
+                netDataInteractor.postFCMToken(new ParamNetwork.Builder()
+                        .put("user_id", data.getUserId() + "")
+                        .put("user_fcm", preferencesInteractor.getDeviceId(activity)).build());
             }
 
             @Override

@@ -55,7 +55,7 @@ public class PreferencesInteractorImpl implements PreferencesInteractor {
     public String getDeviceId(Context context) {
         SharedPreferences sharedPref = context.getSharedPreferences(PREFERENCE_USER_DATA,
                 Context.MODE_PRIVATE);
-        return sharedPref.getString(USER_DEVICE_ID, null);
+        return sharedPref.getString(USER_DEVICE_ID, "");
     }
 
     @Override

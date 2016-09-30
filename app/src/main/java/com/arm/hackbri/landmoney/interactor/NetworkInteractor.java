@@ -1,9 +1,11 @@
 package com.arm.hackbri.landmoney.interactor;
 
 import com.arm.hackbri.landmoney.model.ParamNetwork;
+import com.arm.hackbri.landmoney.model.response.AcceptDebit;
 import com.arm.hackbri.landmoney.model.response.CreateDebitCredit;
 import com.arm.hackbri.landmoney.model.response.Credit;
 import com.arm.hackbri.landmoney.model.response.Debit;
+import com.arm.hackbri.landmoney.model.response.Invite;
 import com.arm.hackbri.landmoney.model.response.Profile;
 import com.arm.hackbri.landmoney.model.response.TBankSaldo;
 import com.arm.hackbri.landmoney.view.CreateCreditView;
@@ -21,6 +23,10 @@ public interface NetworkInteractor {
 
     void login(ParamNetwork paramNetwork, OnFetchDataListener<Profile> onFetchDataListener);
 
+    void acceptDebit(ParamNetwork paramNetwork, OnFetchDataListener<AcceptDebit> onFetchDataListener);
+
+    void invite(ParamNetwork paramNetwork, OnFetchDataListener<Invite> onFetchDataListener);
+
     void register(ParamNetwork paramNetwork, OnFetchDataListener<Profile> onFetchDataListener);
 
     void createNewCredit(ParamNetwork paramNetwork, OnFetchDataListener<CreateDebitCredit> onFetchDataListener);
@@ -34,6 +40,8 @@ public interface NetworkInteractor {
     void getDialogNewDebit(ParamNetwork paramNetwork, OnFetchDataListener<Profile> onFetchDataListener);
 
     void getDialogNewCredit(ParamNetwork paramNetwork, OnFetchDataListener<Profile> onFetchDataListener);
+
+    void postFCMToken(ParamNetwork paramNetwork);
 
 
     void getListRedeem(ParamNetwork paramNetwork, OnFetchDataListener<?> onFetchDataListener);

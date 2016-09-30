@@ -91,7 +91,7 @@ public class CreditActivity extends BaseDrawerActivity implements CreditAdapter.
         preferencesInteractor = new PreferencesInteractorImpl();
         profile = preferencesInteractor.getUserData(this);
         if (profile != null) {
-            setSaldo("Rp." + String.valueOf(profile.gettBankSaldo()));
+            setSaldo("Rp." + String.valueOf(profile.gettBankSaldo().getSaldo()));
             setUsernameText(profile.getUserName());
         }
         if (savedInstanceState == null) {
