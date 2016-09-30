@@ -33,6 +33,7 @@
         android:layout_height="wrap_content">
 
         <EditText
+            android:text="085747212168"
             android:id="@+id/input_phonenumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -47,6 +48,7 @@
         android:layout_height="wrap_content">
 
         <EditText
+            android:text="password"
             android:id="@+id/input_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -14,7 +14,9 @@ import com.arm.hackbri.landmoney.R;
 import com.arm.hackbri.landmoney.model.response.Credit;
 import com.arm.hackbri.landmoney.view.viewComponent.LoadingFeedItemView;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -70,6 +72,8 @@ public class CreditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         if (getItemViewType(position) == VIEW_TYPE_LOADER) {
             bindLoadingFeedItem((LoadingCellHutangViewHolder) viewHolder);
+        } else {
+            bindItemDebit((CellHutangViewHolder) viewHolder, credits.get(position));
         }
     }
 
@@ -82,6 +86,12 @@ public class CreditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             }
         });
         holder.loadingFeedItemView.startLoading();
+    }
+
+    private void bindItemDebit(CellHutangViewHolder viewHolder, Credit credit) {
+        viewHolder.tvName.setText(credit.getUserName());
+        viewHolder.tvAmount.setText("Rp. " + NumberFormat.getNumberInstance(Locale.US).format(credit.getCreditAmt()));
+        viewHolder.tvDesc.setText(credit.getCreditDesc());
     }
 
     @Override
@@ -125,12 +135,14 @@ public class CreditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         @Bind(R.id.btnBayar)
         Button btnBayar;
 
+        @Bind(R.id.tvName)
+        TextView tvName;
+
         @Bind(R.id.description)
-        TextView description;
+        TextView tvDesc;
 
         @Bind(R.id.amount)
-        TextView amount;
-
+        TextView tvAmount;
 
         Credit credit;
 

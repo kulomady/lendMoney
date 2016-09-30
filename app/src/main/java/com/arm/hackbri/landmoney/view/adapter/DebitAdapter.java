@@ -15,12 +15,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.arm.hackbri.landmoney.R;
 import com.arm.hackbri.landmoney.model.response.Debit;
 import com.arm.hackbri.landmoney.view.viewComponent.LoadingFeedItemView;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -38,7 +41,7 @@ public class DebitAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private boolean showLoadingView = false;
 
 
-    public DebitAdapter( Context context,List<Debit> debits) {
+    public DebitAdapter(Context context, List<Debit> debits) {
 
         this.debits = debits;
         this.context = context;
@@ -78,7 +81,15 @@ public class DebitAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         if (getItemViewType(position) == VIEW_TYPE_LOADER) {
             bindLoadingFeedItem((LoadingCellHutangViewHolder) viewHolder);
+        } else {
+            bindItemDebit((CellHutangViewHolder) viewHolder, debits.get(position));
         }
+    }
+
+    private void bindItemDebit(CellHutangViewHolder viewHolder, Debit debit) {
+        viewHolder.tvName.setText(debit.getUserName());
+        viewHolder.tvAmount.setText("Rp. " + NumberFormat.getNumberInstance(Locale.US).format(debit.getDebtAmt()));
+        viewHolder.tvDesc.setText(debit.getDebtDesc());
     }
 
     private void bindLoadingFeedItem(final LoadingCellHutangViewHolder holder) {
@@ -141,6 +152,14 @@ public class DebitAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         @Bind(R.id.btnBayar)
         Button btnBayar;
 
+        @Bind(R.id.tvName)
+        TextView tvName;
+
+        @Bind(R.id.description)
+        TextView tvDesc;
+
+        @Bind(R.id.tvAmount)
+        TextView tvAmount;
 
         Debit debit;
 
