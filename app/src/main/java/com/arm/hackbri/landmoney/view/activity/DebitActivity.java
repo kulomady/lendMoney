@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -23,18 +24,24 @@ import android.view.View;
 import android.view.Window;
 import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 
 import com.arm.hackbri.landmoney.R;
 import com.arm.hackbri.landmoney.Utils;
+import com.arm.hackbri.landmoney.model.response.Debit;
+import com.arm.hackbri.landmoney.view.DebitListView;
 import com.arm.hackbri.landmoney.view.adapter.DebitAdapter;
-import com.arm.hackbri.landmoney.view.adapter.FeedItemAnimator;
+import com.arm.hackbri.landmoney.view.adapter.DebitItemAnimator;
 import com.arm.hackbri.landmoney.view.viewComponent.FeedContextMenuManager;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.OnClick;
 
-public class DebitActivity extends BaseDrawerActivity implements DebitAdapter.OnDebitClickListener {
+public class DebitActivity extends BaseDrawerActivity implements DebitAdapter.OnDebitClickListener,
+        DebitListView {
     public static final String ACTION_SHOW_LOADING_ITEM = "action_show_loading_item";
 
     private static final int ANIM_DURATION_TOOLBAR = 300;
@@ -46,6 +53,8 @@ public class DebitActivity extends BaseDrawerActivity implements DebitAdapter.On
     FloatingActionButton fabCreate;
     @Bind(R.id.content)
     CoordinatorLayout clContent;
+    @Bind(R.id.debit_progressBar)
+    ProgressBar debitProgressBar;
 
     private DebitAdapter debitAdapter;
 
@@ -55,7 +64,7 @@ public class DebitActivity extends BaseDrawerActivity implements DebitAdapter.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_debit);
-        setupFeed();
+
 
         if (savedInstanceState == null) {
             pendingIntroAnimation = true;
@@ -64,26 +73,7 @@ public class DebitActivity extends BaseDrawerActivity implements DebitAdapter.On
         }
     }
 
-    private void setupFeed() {
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this) {
-            @Override
-            protected int getExtraLayoutSpace(RecyclerView.State state) {
-                return 300;
-            }
-        };
-        rvFeed.setLayoutManager(linearLayoutManager);
 
-        debitAdapter = new DebitAdapter(this);
-        debitAdapter.setOnDebitClickListener(this);
-        rvFeed.setAdapter(debitAdapter);
-        rvFeed.setOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                FeedContextMenuManager.getInstance().onScrolled(recyclerView, dx, dy);
-            }
-        });
-        rvFeed.setItemAnimator(new FeedItemAnimator());
-    }
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -145,7 +135,7 @@ public class DebitActivity extends BaseDrawerActivity implements DebitAdapter.On
                 .setStartDelay(300)
                 .setDuration(ANIM_DURATION_FAB)
                 .start();
-        debitAdapter.updateItems(true);
+
     }
 
 
@@ -159,7 +149,7 @@ public class DebitActivity extends BaseDrawerActivity implements DebitAdapter.On
         int[] startingLocation = new int[2];
         fabCreate.getLocationOnScreen(startingLocation);
         startingLocation[0] += fabCreate.getWidth() / 2;
-        CreateDebitActivity.openWithPhotoUri(this, null);
+        CreateDebitActivity.openWithPhotoUri(this);
         overridePendingTransition(0, 0);
     }
 
@@ -181,4 +171,72 @@ public class DebitActivity extends BaseDrawerActivity implements DebitAdapter.On
         dialog.show();
     }
 
+    @Override
+    public void showProgressFetchDebitList() {
+        rvFeed.setVisibility(View.GONE);
+        debitProgressBar.setVisibility(View.VISIBLE);
+
+    }
+
+    @Override
+    public void dismissProgressFetchDebitList() {
+        debitProgressBar.setVisibility(View.GONE);
+        rvFeed.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void renderDebitListDatas(List<Debit> debitList) {
+        setDebitList(debitList);
+    }
+
+    @Override
+    public void renderErrorServerFetchData(String messageError) {
+        showMessageSnackBar(messageError);
+    }
+
+    @Override
+    public void renderErrorResponseFetchData(String messageError) {
+        showMessageSnackBar(messageError);
+    }
+
+    @Override
+    public void renderErrorConnection(String messageError) {
+        showMessageSnackBar(messageError);
+    }
+
+    @Override
+    public void renderErrorUnknown(String messageError) {
+        showMessageSnackBar(messageError);
+    }
+
+    @Override
+    public void renderUserNotLogin() {
+
+    }
+
+    private void setDebitList(List<Debit> debits) {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this) {
+            @Override
+            protected int getExtraLayoutSpace(RecyclerView.State state) {
+                return 300;
+            }
+        };
+        rvFeed.setLayoutManager(linearLayoutManager);
+
+        debitAdapter = new DebitAdapter(this,debits);
+        debitAdapter.setOnDebitClickListener(this);
+        rvFeed.setAdapter(debitAdapter);
+        rvFeed.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                FeedContextMenuManager.getInstance().onScrolled(recyclerView, dx, dy);
+            }
+        });
+        rvFeed.setItemAnimator(new DebitItemAnimator());
+        debitAdapter.updateItems(true);
+    }
+
+    void showMessageSnackBar(String message) {
+        Snackbar.make(clContent, message, Snackbar.LENGTH_LONG).show();
+    }
 }

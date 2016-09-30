@@ -17,30 +17,30 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.arm.hackbri.landmoney.R;
+import com.arm.hackbri.landmoney.model.response.Debit;
 import com.arm.hackbri.landmoney.view.viewComponent.LoadingFeedItemView;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class DebitAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    public static final String ACTION_LIKE_BUTTON_CLICKED = "action_like_button_button";
-    public static final String ACTION_LIKE_IMAGE_CLICKED = "action_like_image_button";
 
     public static final int VIEW_TYPE_DEFAULT = 1;
     public static final int VIEW_TYPE_LOADER = 2;
 
-    private final List<FeedItem> feedItems = new ArrayList<>();
+    private final List<Debit> debits;
 
     private Context context;
     private OnDebitClickListener onDebitClickListener;
 
     private boolean showLoadingView = false;
 
-    public DebitAdapter(Context context) {
+
+    public DebitAdapter( Context context,List<Debit> debits) {
+
+        this.debits = debits;
         this.context = context;
     }
 
@@ -74,7 +74,7 @@ public class DebitAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        ((CellHutangViewHolder) viewHolder).bindView(feedItems.get(position));
+        ((CellHutangViewHolder) viewHolder).bindView(debits.get(position));
 
         if (getItemViewType(position) == VIEW_TYPE_LOADER) {
             bindLoadingFeedItem((LoadingCellHutangViewHolder) viewHolder);
@@ -103,22 +103,22 @@ public class DebitAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        return feedItems.size();
+        return debits.size();
     }
 
     public void updateItems(boolean animated) {
-        feedItems.clear();
-        feedItems.addAll(Arrays.asList(
-                new FeedItem(33, false),
-                new FeedItem(1, false),
-                new FeedItem(223, false),
-                new FeedItem(2, false),
-                new FeedItem(6, false),
-                new FeedItem(8, false),
-                new FeedItem(99, false)
-        ));
+        debits.clear();
+//        debits.addAll(Arrays.asList(
+//                new FeedItem(33, false),
+//                new FeedItem(1, false),
+//                new FeedItem(223, false),
+//                new FeedItem(2, false),
+//                new FeedItem(6, false),
+//                new FeedItem(8, false),
+//                new FeedItem(99, false)
+//        ));
         if (animated) {
-            notifyItemRangeInserted(0, feedItems.size());
+            notifyItemRangeInserted(0, debits.size());
         } else {
             notifyDataSetChanged();
         }
@@ -142,20 +142,20 @@ public class DebitAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         Button btnBayar;
 
 
-        FeedItem feedItem;
+        Debit debit;
 
         public CellHutangViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }
 
-        public void bindView(FeedItem feedItem) {
-            this.feedItem = feedItem;
+        public void bindView(Debit debit) {
+            this.debit = debit;
         }
 
-//        public FeedItem getFeedItem() {
-//            return feedItem;
-//        }
+        public Debit getDebit() {
+            return debit;
+        }
     }
 
     public static class LoadingCellHutangViewHolder extends CellHutangViewHolder {
@@ -168,18 +168,8 @@ public class DebitAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
 
         @Override
-        public void bindView(FeedItem feedItem) {
-            super.bindView(feedItem);
-        }
-    }
-
-    public static class FeedItem {
-        public int likesCount;
-        public boolean isLiked;
-
-        public FeedItem(int likesCount, boolean isLiked) {
-            this.likesCount = likesCount;
-            this.isLiked = isLiked;
+        public void bindView(Debit debit) {
+            super.bindView(debit);
         }
     }
 

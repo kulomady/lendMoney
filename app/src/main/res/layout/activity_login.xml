@@ -24,15 +24,16 @@
         android:layout_height="wrap_content">
 
         <EditText
-            android:id="@+id/input_name"
+            android:id="@+id/input_phonenumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:hint="username" />
+            android:inputType="phone"
+            android:hint="No Telepon" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/input_layout_email"
+        android:id="@+id/input_layout_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -47,6 +48,21 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/btnLogin"
+        android:layout_marginTop="16dp"
         android:text="Login"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center"
+        android:text="OR"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnSignup"
+        android:text="Signup"/>
 
 </LinearLayout>

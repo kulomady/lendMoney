@@ -49,13 +49,18 @@
                 android:orientation="vertical"
                 android:padding="10dp"
                 android:paddingBottom="16dp">
+                <TextView
+                    android:id="@+id/task_create_debit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/input_layout_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <EditText
-                        android:id="@+id/input_name"
+                        android:id="@+id/input_phonenumber"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:singleLine="true"
@@ -68,30 +73,30 @@
                     android:layout_height="wrap_content">
 
                     <EditText
-                        android:id="@+id/input_email"
+                        android:id="@+id/input_amount"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textEmailAddress"
+                        android:inputType="number"
                         android:hint="Jumlah" />
                 </android.support.design.widget.TextInputLayout>
 
                 <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:id="@+id/rg_payment_method"
                     android:orientation="vertical">
                     <RadioButton android:id="@+id/bayar_sekarang"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Bayar Sekarang"
-                        android:onClick="onRadioWaktuPembayaranClicked"/>
-                    <RadioButton android:id="@+id/radio_bayar_nanti"
+                        android:text="Bayar Sekarang" />
+                    <RadioButton android:id="@+id/bayar_nanti"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Bayar Nanti"
-                        android:onClick="onRadioButtonClicked"/>
+                        android:text="Bayar Nanti" />
                 </RadioGroup>
 
                 <Button
+                    android:id="@+id/btnSubmit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"

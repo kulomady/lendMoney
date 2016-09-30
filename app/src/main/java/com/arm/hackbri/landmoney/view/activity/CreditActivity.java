@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -16,20 +17,25 @@ import android.view.View;
 import android.view.Window;
 import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 
 import com.arm.hackbri.landmoney.R;
 import com.arm.hackbri.landmoney.Utils;
+import com.arm.hackbri.landmoney.model.response.Credit;
+import com.arm.hackbri.landmoney.view.CreditListView;
 import com.arm.hackbri.landmoney.view.adapter.CreditAdapter;
-import com.arm.hackbri.landmoney.view.adapter.FeedItemAnimator;
+import com.arm.hackbri.landmoney.view.adapter.CreditItemAnimator;
 import com.arm.hackbri.landmoney.view.viewComponent.FeedContextMenu;
 import com.arm.hackbri.landmoney.view.viewComponent.FeedContextMenuManager;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.OnClick;
 
 public class CreditActivity extends BaseDrawerActivity implements CreditAdapter.OnItemClickListener,
-        FeedContextMenu.OnFeedContextMenuItemClickListener {
+        FeedContextMenu.OnFeedContextMenuItemClickListener, CreditListView {
     public static final String ACTION_SHOW_LOADING_ITEM = "action_show_loading_item";
 
     private static final int ANIM_DURATION_TOOLBAR = 300;
@@ -42,6 +48,9 @@ public class CreditActivity extends BaseDrawerActivity implements CreditAdapter.
     @Bind(R.id.content)
     CoordinatorLayout clContent;
 
+    @Bind(R.id.credit_progressbar)
+    ProgressBar creditProgressBar;
+
     private CreditAdapter creditAdapter;
 
     private boolean pendingIntroAnimation;
@@ -50,7 +59,7 @@ public class CreditActivity extends BaseDrawerActivity implements CreditAdapter.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_credit);
-        setupFeed();
+//        setupFeed();
 
         if (savedInstanceState == null) {
             pendingIntroAnimation = true;
@@ -59,7 +68,7 @@ public class CreditActivity extends BaseDrawerActivity implements CreditAdapter.
         }
     }
 
-    private void setupFeed() {
+    private void setupFeed(List<Credit> credits) {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this) {
             @Override
             protected int getExtraLayoutSpace(RecyclerView.State state) {
@@ -68,7 +77,7 @@ public class CreditActivity extends BaseDrawerActivity implements CreditAdapter.
         };
         rvFeed.setLayoutManager(linearLayoutManager);
 
-        creditAdapter = new CreditAdapter(this);
+        creditAdapter = new CreditAdapter(credits, this);
         creditAdapter.setOnItemClickListener(this);
         rvFeed.setAdapter(creditAdapter);
         rvFeed.setOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -78,7 +87,8 @@ public class CreditActivity extends BaseDrawerActivity implements CreditAdapter.
             }
         });
 
-        rvFeed.setItemAnimator(new FeedItemAnimator());
+        rvFeed.setItemAnimator(new CreditItemAnimator());
+        creditAdapter.updateItems(true);
     }
 
     @Override
@@ -141,7 +151,7 @@ public class CreditActivity extends BaseDrawerActivity implements CreditAdapter.
                 .setStartDelay(300)
                 .setDuration(ANIM_DURATION_FAB)
                 .start();
-        creditAdapter.updateItems(true);
+
     }
 
     @Override
@@ -169,7 +179,7 @@ public class CreditActivity extends BaseDrawerActivity implements CreditAdapter.
         int[] startingLocation = new int[2];
         fabCreate.getLocationOnScreen(startingLocation);
         startingLocation[0] += fabCreate.getWidth() / 2;
-        CreateCreditActivity.openWithPhotoUri(this, null);
+        CreateCreditActivity.openWithPhotoUri(this);
         overridePendingTransition(0, 0);
     }
 
@@ -195,5 +205,51 @@ public class CreditActivity extends BaseDrawerActivity implements CreditAdapter.
         });
 
         dialog.show();
+    }
+
+    @Override
+    public void showProgressFetchCreditList() {
+        rvFeed.setVisibility(View.GONE);
+        creditProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void dismissProgressFetchCreditList() {
+        creditProgressBar.setVisibility(View.GONE);
+        rvFeed.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void renderCreditListDatas(List<Credit> creditList) {
+        setupFeed(creditList);
+    }
+
+    @Override
+    public void renderErrorServerFetchData(String messageError) {
+        showSnackBarError(messageError);
+    }
+
+    @Override
+    public void renderErrorResponseFetchData(String messageError) {
+        showSnackBarError(messageError);
+    }
+
+    @Override
+    public void renderErrorConnection(String messageError) {
+        showSnackBarError(messageError);
+    }
+
+    @Override
+    public void renderErrorUnknown(String messageError) {
+        showSnackBarError(messageError);
+    }
+
+    @Override
+    public void renderUserNotLogin() {
+
+    }
+
+    void showSnackBarError(String message) {
+        Snackbar.make(clContent, message, Snackbar.LENGTH_LONG).show();
     }
 }

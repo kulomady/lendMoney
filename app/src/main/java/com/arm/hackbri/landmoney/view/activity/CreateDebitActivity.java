@@ -10,40 +10,43 @@ package com.arm.hackbri.landmoney.view.activity;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.RadioGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.arm.hackbri.landmoney.R;
 import com.arm.hackbri.landmoney.Utils;
+import com.arm.hackbri.landmoney.view.CreateDebitView;
 
-public class CreateDebitActivity extends BaseActivity {
-    public static final String ARG_TAKEN_PHOTO_URI = "arg_taken_photo_uri";
+import butterknife.Bind;
 
-    private boolean propagatingToggleState = false;
-    private Uri photoUri;
-    private int photoSize;
+public class CreateDebitActivity extends BaseActivity implements CreateDebitView{
 
-    public static void openWithPhotoUri(Activity openingActivity, Uri photoUri) {
+    @Bind(R.id.task_create_debit)
+    TextView taskCreateDebit;
+    @Bind(R.id.input_amount)
+    EditText edtAmount;
+    @Bind(R.id.input_phonenumber)
+    EditText edtPhoneNumber;
+    @Bind(R.id.rg_payment_method)
+    RadioGroup rgPaymentMethod;
+    public static void openWithPhotoUri(Activity openingActivity) {
         Intent intent = new Intent(openingActivity, CreateDebitActivity.class);
-        intent.putExtra(ARG_TAKEN_PHOTO_URI, photoUri);
         openingActivity.startActivity(intent);
+
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_debit);
+//        ButterKnife.bind(this);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_grey600_24dp);
-        photoSize = getResources().getDimensionPixelSize(R.dimen.publish_photo_thumbnail_size);
-
-        if (savedInstanceState == null) {
-            photoUri = getIntent().getParcelableExtra(ARG_TAKEN_PHOTO_URI);
-        } else {
-            photoUri = savedInstanceState.getParcelable(ARG_TAKEN_PHOTO_URI);
-        }
         updateStatusBarColor();
 
     }
@@ -83,7 +86,30 @@ public class CreateDebitActivity extends BaseActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(ARG_TAKEN_PHOTO_URI, photoUri);
+
+    }
+    @Override
+    public void renderErrorConnection(String messageError) {
+        showMessage(messageError);
     }
 
+    @Override
+    public void renderErrorUnknown(String messageError) {
+        showMessage(messageError);
+    }
+
+    @Override
+    public String getPhoneNumber() {
+        return edtPhoneNumber.getText().toString();
+    }
+
+    @Override
+    public int getAmount() {
+        return Integer.parseInt(edtAmount.getText().toString());
+    }
+
+
+    private void showMessage(String messageError) {
+        Toast.makeText(this, messageError, Toast.LENGTH_SHORT).show();
+    }
 }

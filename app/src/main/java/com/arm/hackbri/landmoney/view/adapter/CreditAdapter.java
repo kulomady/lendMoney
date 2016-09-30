@@ -10,30 +10,27 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.arm.hackbri.landmoney.R;
+import com.arm.hackbri.landmoney.model.response.Credit;
 import com.arm.hackbri.landmoney.view.viewComponent.LoadingFeedItemView;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class CreditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    public static final String ACTION_LIKE_BUTTON_CLICKED = "action_like_button_button";
-    public static final String ACTION_LIKE_IMAGE_CLICKED = "action_like_image_button";
-
     public static final int VIEW_TYPE_DEFAULT = 1;
     public static final int VIEW_TYPE_LOADER = 2;
 
-    private final List<FeedItem> feedItems = new ArrayList<>();
+    private final List<Credit> credits;
 
     private Context context;
     private OnItemClickListener onItemClickListener;
 
     private boolean showLoadingView = false;
 
-    public CreditAdapter(Context context) {
+    public CreditAdapter(List<Credit> credits, Context context) {
+        this.credits = credits;
         this.context = context;
     }
 
@@ -68,7 +65,7 @@ public class CreditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        ((CellHutangViewHolder) viewHolder).bindView(feedItems.get(position));
+        ((CellHutangViewHolder) viewHolder).bindView(credits.get(position));
 
         if (getItemViewType(position) == VIEW_TYPE_LOADER) {
             bindLoadingFeedItem((LoadingCellHutangViewHolder) viewHolder);
@@ -97,22 +94,22 @@ public class CreditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemCount() {
-        return feedItems.size();
+        return credits.size();
     }
 
     public void updateItems(boolean animated) {
-        feedItems.clear();
-        feedItems.addAll(Arrays.asList(
-                new FeedItem(33, false),
-                new FeedItem(1, false),
-                new FeedItem(223, false),
-                new FeedItem(2, false),
-                new FeedItem(6, false),
-                new FeedItem(8, false),
-                new FeedItem(99, false)
-        ));
+        credits.clear();
+//        credits.addAll(Arrays.asList(
+//                new FeedItem(33, false),
+//                new FeedItem(1, false),
+//                new FeedItem(223, false),
+//                new FeedItem(2, false),
+//                new FeedItem(6, false),
+//                new FeedItem(8, false),
+//                new FeedItem(99, false)
+//        ));
         if (animated) {
-            notifyItemRangeInserted(0, feedItems.size());
+            notifyItemRangeInserted(0, credits.size());
         } else {
             notifyDataSetChanged();
         }
@@ -136,19 +133,19 @@ public class CreditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         Button btnBayar;
 
 
-        FeedItem feedItem;
+        Credit credit;
 
         public CellHutangViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }
 
-        public void bindView(FeedItem feedItem) {
-            this.feedItem = feedItem;
+        public void bindView(Credit credit) {
+            this.credit = credit;
         }
 
-        public FeedItem getFeedItem() {
-            return feedItem;
+        public Credit getCredit() {
+            return credit;
         }
     }
 
@@ -162,20 +159,11 @@ public class CreditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
 
         @Override
-        public void bindView(FeedItem feedItem) {
-            super.bindView(feedItem);
+        public void bindView(Credit credit) {
+            super.bindView(credit);
         }
     }
 
-    public static class FeedItem {
-        public int likesCount;
-        public boolean isLiked;
-
-        public FeedItem(int likesCount, boolean isLiked) {
-            this.likesCount = likesCount;
-            this.isLiked = isLiked;
-        }
-    }
 
     public interface OnItemClickListener {
 

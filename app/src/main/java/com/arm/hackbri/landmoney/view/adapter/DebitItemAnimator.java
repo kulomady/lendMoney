@@ -1,3 +1,10 @@
+/*
+ * Created By Kulomady on 9/30/16 4:19 PM
+ * Copyright (c) 2016. All rights reserved
+ *
+ * Last Modified 9/30/16 4:19 PM
+ */
+
 package com.arm.hackbri.landmoney.view.adapter;
 
 import android.animation.Animator;
@@ -11,7 +18,7 @@ import com.arm.hackbri.landmoney.Utils;
 
 import java.util.List;
 
-public class FeedItemAnimator extends DefaultItemAnimator {
+public class DebitItemAnimator extends DefaultItemAnimator {
 
     private int lastAddAnimatedItem = -2;
 
@@ -34,7 +41,7 @@ public class FeedItemAnimator extends DefaultItemAnimator {
         if (viewHolder.getItemViewType() == CreditAdapter.VIEW_TYPE_DEFAULT) {
             if (viewHolder.getLayoutPosition() > lastAddAnimatedItem) {
                 lastAddAnimatedItem++;
-                runEnterAnimation((CreditAdapter.CellHutangViewHolder) viewHolder);
+                runEnterAnimation((DebitAdapter.CellHutangViewHolder) viewHolder);
                 return false;
             }
         }
@@ -43,7 +50,7 @@ public class FeedItemAnimator extends DefaultItemAnimator {
         return false;
     }
 
-    private void runEnterAnimation(final CreditAdapter.CellHutangViewHolder holder) {
+    private void runEnterAnimation(final DebitAdapter.CellHutangViewHolder holder) {
         final int screenHeight = Utils.getScreenHeight(holder.itemView.getContext());
         holder.itemView.setTranslationY(screenHeight);
         holder.itemView.animate()

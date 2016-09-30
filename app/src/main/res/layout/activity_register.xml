@@ -17,13 +17,13 @@
         android:textStyle="bold" />
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/full_name"
+        android:id="@+id/full_name_label"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp">
 
         <EditText
-            android:id="@+id/your_full_name"
+            android:id="@+id/full_name"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -32,13 +32,13 @@
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/email_address"
+        android:id="@+id/email_address_label"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp">
 
         <EditText
-            android:id="@+id/your_email_address"
+            android:id="@+id/email_address"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -47,13 +47,13 @@
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/password"
+        android:id="@+id/passwordLabel"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp">
 
         <EditText
-            android:id="@+id/create_new_password"
+            android:id="@+id/password"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -62,13 +62,13 @@
     </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/password_conf"
+            android:id="@+id/password_conf_label"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp">
 
             <EditText
-                android:id="@+id/create_new_password_conf"
+                android:id="@+id/password_conf"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -107,6 +107,7 @@
         </android.support.design.widget.TextInputLayout>
 
     <Button
+        android:id="@+id/btnSignup"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"

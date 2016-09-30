@@ -3,35 +3,35 @@ package com.arm.hackbri.landmoney.view.activity;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewTreeObserver;
-import android.view.animation.OvershootInterpolator;
-import android.widget.ImageView;
+import android.widget.EditText;
+import android.widget.RadioGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.arm.hackbri.landmoney.R;
 import com.arm.hackbri.landmoney.Utils;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
+import com.arm.hackbri.landmoney.view.CreateCreditView;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 
-public class CreateCreditActivity extends BaseActivity {
-    public static final String ARG_TAKEN_PHOTO_URI = "arg_taken_photo_uri";
+public class CreateCreditActivity extends BaseActivity implements CreateCreditView {
+    @Bind(R.id.task_create_credit)
+    TextView taskCreateCredit;
 
-    @Bind(R.id.ivPhoto)
-    ImageView ivPhoto;
+    @Bind(R.id.input_amount)
+    EditText edtAmount;
+    @Bind(R.id.input_phonenumber)
+    EditText edtPhoneNumber;
+    @Bind(R.id.rg_payment_method)
+    RadioGroup rgPaymentMethod;
 
-    private boolean propagatingToggleState = false;
-    private Uri photoUri;
-    private int photoSize;
-
-    public static void openWithPhotoUri(Activity openingActivity, Uri photoUri) {
+    public static void openWithPhotoUri(Activity openingActivity) {
         Intent intent = new Intent(openingActivity, CreateCreditActivity.class);
-        intent.putExtra(ARG_TAKEN_PHOTO_URI, photoUri);
         openingActivity.startActivity(intent);
     }
 
@@ -40,23 +40,10 @@ public class CreateCreditActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_credit);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_grey600_24dp);
-        photoSize = getResources().getDimensionPixelSize(R.dimen.publish_photo_thumbnail_size);
-
-        if (savedInstanceState == null) {
-            photoUri = getIntent().getParcelableExtra(ARG_TAKEN_PHOTO_URI);
-        } else {
-            photoUri = savedInstanceState.getParcelable(ARG_TAKEN_PHOTO_URI);
-        }
         updateStatusBarColor();
 
-        ivPhoto.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                ivPhoto.getViewTreeObserver().removeOnPreDrawListener(this);
-                loadThumbnailPhoto();
-                return true;
-            }
-        });
+        ButterKnife.bind(this);
+
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -64,30 +51,6 @@ public class CreateCreditActivity extends BaseActivity {
         if (Utils.isAndroid5()) {
             getWindow().setStatusBarColor(0xff888888);
         }
-    }
-
-    private void loadThumbnailPhoto() {
-        ivPhoto.setScaleX(0);
-        ivPhoto.setScaleY(0);
-        Picasso.with(this)
-                .load(photoUri)
-                .centerCrop()
-                .resize(photoSize, photoSize)
-                .into(ivPhoto, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        ivPhoto.animate()
-                                .scaleX(1.f).scaleY(1.f)
-                                .setInterpolator(new OvershootInterpolator())
-                                .setDuration(400)
-                                .setStartDelay(200)
-                                .start();
-                    }
-
-                    @Override
-                    public void onError() {
-                    }
-                });
     }
 
     @Override
@@ -116,6 +79,32 @@ public class CreateCreditActivity extends BaseActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(ARG_TAKEN_PHOTO_URI, photoUri);
+
     }
+
+    @Override
+    public void renderErrorConnection(String messageError) {
+        showMessage(messageError);
+    }
+
+    @Override
+    public void renderErrorUnknown(String messageError) {
+        showMessage(messageError);
+    }
+
+    @Override
+    public String getPhoneNumber() {
+        return edtPhoneNumber.getText().toString();
+    }
+
+    @Override
+    public int getAmount() {
+        return Integer.parseInt(edtAmount.getText().toString());
+    }
+
+    private void showMessage(String messageError) {
+        Toast.makeText(this, messageError, Toast.LENGTH_SHORT).show();
+    }
+
+
 }
