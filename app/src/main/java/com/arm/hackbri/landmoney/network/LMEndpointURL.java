@@ -11,13 +11,13 @@ public interface LMEndpointURL {
 
     String PATH_LOGIN = "login";
     String PATH_REGISTER = "register";
-    String PATH_GET_DEBIT_LIST = "";
-    String PATH_GET_CREDIT_LIST = "";
-    String PATH_GET_DIALOG_NEW_CREDIT = "";
-    String PATH_GET_DIALOG_NEW_DEBIT = "";
+    String PATH_GET_DEBIT_LIST = "listdebt";
+    String PATH_GET_CREDIT_LIST = "listcredit";
+    String PATH_GET_DIALOG_NEW_CREDIT = "dialognewcredit";
+    String PATH_GET_DIALOG_NEW_DEBIT = "dialognewdebt";
     String PATH_GET_TBANK_SALDO = "bri/tbank/saldo";
-    String PATH_CREATE_DEBIT = "";
-    String PATH_CREATE_CREDIT = "";
+    String PATH_CREATE_DEBIT = "createnewdebt";
+    String PATH_CREATE_CREDIT = "createnewcredit";
     String PATH_GET_DEPOSIT = "";
     String PATH_REDEEM_LIST = "";
     String PATH_TOKEN = "bri/bri/tbank/token";
