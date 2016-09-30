@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.arm.hackbri.landmoney.R;
 import com.arm.hackbri.landmoney.model.response.Credit;
@@ -99,15 +100,7 @@ public class CreditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     public void updateItems(boolean animated) {
         credits.clear();
-//        credits.addAll(Arrays.asList(
-//                new FeedItem(33, false),
-//                new FeedItem(1, false),
-//                new FeedItem(223, false),
-//                new FeedItem(2, false),
-//                new FeedItem(6, false),
-//                new FeedItem(8, false),
-//                new FeedItem(99, false)
-//        ));
+
         if (animated) {
             notifyItemRangeInserted(0, credits.size());
         } else {
@@ -131,6 +124,12 @@ public class CreditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         @Bind(R.id.btnBayar)
         Button btnBayar;
+
+        @Bind(R.id.description)
+        TextView description;
+
+        @Bind(R.id.amount)
+        TextView amount;
 
 
         Credit credit;

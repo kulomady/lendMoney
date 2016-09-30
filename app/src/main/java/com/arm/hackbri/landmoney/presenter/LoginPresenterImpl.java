@@ -33,17 +33,20 @@ public class LoginPresenterImpl implements LoginPresenter {
 
     @Override
     public void processPostLogin(final Activity activity) {
-        netDataInteractor.login(new ParamNetwork.Builder().put("phone", viewListener.getPhoneNumber())
-                .put("password", viewListener.getPassword())
+        this.viewListener.showProgressFetchCreditList();
+        netDataInteractor.login(new ParamNetwork.Builder().put("user_phone", viewListener.getPhoneNumber())
+                .put("user_password", viewListener.getPassword())
                 .build(), new OnFetchDataListener<Profile>() {
             @Override
             public void onSuccessFetchData(Profile data) {
+                viewListener.dismissProgressFetchCreditList();
                 viewListener.renderProfileData(data);
                 preferencesInteractor.storeUserData(activity, data);
             }
 
             @Override
             public void onFailedFetchData(Throwable throwable) {
+                viewListener.dismissProgressFetchCreditList();
                 if (throwable instanceof SocketTimeoutException) {
                     viewListener.renderErrorConnection("Server timeout, silahkan coba kembali");
                 } else if (throwable instanceof UnknownHostException) {

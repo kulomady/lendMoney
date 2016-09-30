@@ -32,7 +32,7 @@ public class LMService {
         Interceptor interceptor = new LMInterceptor();
         client.interceptors().add(interceptor);
         HttpLoggingInterceptor logInterceptor = new HttpLoggingInterceptor();
-        logInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
+        logInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         client.interceptors().add(logInterceptor);
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
