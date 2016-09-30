@@ -12,9 +12,9 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class Debit implements Parcelable {
-    public static int STATUS_PENDING = 1;
+    public static int STATUS_PENDING = -1;
     public static int STATUS_COMPLETED = 0;
-    public static int STATUS_UNPAID = -1;
+    public static int STATUS_UNPAID = 1;
 
     @SerializedName("user_id")
     @Expose
