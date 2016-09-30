@@ -102,6 +102,11 @@ public class CreateCreditActivity extends BaseActivity implements CreateCreditVi
         return Integer.parseInt(edtAmount.getText().toString());
     }
 
+    @Override
+    public String getDescription() {
+        return null;
+    }
+
     private void showMessage(String messageError) {
         Toast.makeText(this, messageError, Toast.LENGTH_SHORT).show();
     }

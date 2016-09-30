@@ -14,7 +14,8 @@ public interface CreateCreditView {
     void renderErrorUnknown(String messageError);
 
     String getPhoneNumber();
+
     int getAmount();
 
-
+    String getDescription();
 }
