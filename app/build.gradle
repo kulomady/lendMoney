@@ -41,3 +41,5 @@ dependencies {
     compile 'com.squareup.okhttp:logging-interceptor:2.6.0'
     compile 'io.reactivex:rxandroid:1.0.1'
 }
+
+apply plugin: 'com.google.gms.google-services'
