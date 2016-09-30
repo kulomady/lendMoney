@@ -1,32 +1,40 @@
+/*
+ * Created By Kulomady on 9/29/16 10:22 PM
+ * Copyright (c) 2016. All rights reserved
+ *
+ * Last Modified 9/29/16 10:21 PM
+ */
+
 package com.arm.hackbri.landmoney.view.activity;
 
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.View;
+import android.view.Window;
 import android.view.animation.OvershootInterpolator;
+import android.widget.Button;
+import android.widget.RadioGroup;
 
 import com.arm.hackbri.landmoney.R;
 import com.arm.hackbri.landmoney.Utils;
-import com.arm.hackbri.landmoney.view.adapter.HutangAdapter;
+import com.arm.hackbri.landmoney.view.adapter.DebitAdapter;
 import com.arm.hackbri.landmoney.view.adapter.FeedItemAnimator;
-import com.arm.hackbri.landmoney.view.viewComponent.FeedContextMenu;
 import com.arm.hackbri.landmoney.view.viewComponent.FeedContextMenuManager;
 
 import butterknife.Bind;
 import butterknife.OnClick;
 
-public class MainActivity extends BaseDrawerActivity implements HutangAdapter.OnFeedItemClickListener,
-        FeedContextMenu.OnFeedContextMenuItemClickListener {
+public class DebitActivity extends BaseDrawerActivity implements DebitAdapter.OnDebitClickListener {
     public static final String ACTION_SHOW_LOADING_ITEM = "action_show_loading_item";
 
     private static final int ANIM_DURATION_TOOLBAR = 300;
@@ -34,25 +42,25 @@ public class MainActivity extends BaseDrawerActivity implements HutangAdapter.On
 
     @Bind(R.id.rvFeed)
     RecyclerView rvFeed;
-    @Bind(R.id.btnCreate)
+    @Bind(R.id.btnBuatTagihan)
     FloatingActionButton fabCreate;
     @Bind(R.id.content)
     CoordinatorLayout clContent;
 
-    private HutangAdapter hutangAdapter;
+    private DebitAdapter debitAdapter;
 
     private boolean pendingIntroAnimation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_debit);
         setupFeed();
 
         if (savedInstanceState == null) {
             pendingIntroAnimation = true;
         } else {
-            hutangAdapter.updateItems(false);
+            debitAdapter.updateItems(false);
         }
     }
 
@@ -65,9 +73,9 @@ public class MainActivity extends BaseDrawerActivity implements HutangAdapter.On
         };
         rvFeed.setLayoutManager(linearLayoutManager);
 
-        hutangAdapter = new HutangAdapter(this);
-        hutangAdapter.setOnFeedItemClickListener(this);
-        rvFeed.setAdapter(hutangAdapter);
+        debitAdapter = new DebitAdapter(this);
+        debitAdapter.setOnDebitClickListener(this);
+        rvFeed.setAdapter(debitAdapter);
         rvFeed.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -90,7 +98,7 @@ public class MainActivity extends BaseDrawerActivity implements HutangAdapter.On
             @Override
             public void run() {
                 rvFeed.smoothScrollToPosition(0);
-                hutangAdapter.showLoadingView();
+                debitAdapter.showLoadingView();
             }
         }, 500);
     }
@@ -110,13 +118,13 @@ public class MainActivity extends BaseDrawerActivity implements HutangAdapter.On
 
         int actionbarSize = Utils.dpToPx(56);
         getToolbar().setTranslationY(-actionbarSize);
-        getIvLogo().setTranslationY(-actionbarSize);
+        getTitleText().setTranslationY(-actionbarSize);
 
         getToolbar().animate()
                 .translationY(0)
                 .setDuration(ANIM_DURATION_TOOLBAR)
                 .setStartDelay(300);
-        getIvLogo().animate()
+        getTitleText().animate()
                 .translationY(0)
                 .setDuration(ANIM_DURATION_TOOLBAR)
                 .setStartDelay(400)
@@ -137,63 +145,40 @@ public class MainActivity extends BaseDrawerActivity implements HutangAdapter.On
                 .setStartDelay(300)
                 .setDuration(ANIM_DURATION_FAB)
                 .start();
-        hutangAdapter.updateItems(true);
+        debitAdapter.updateItems(true);
     }
+
 
     @Override
-    public void onCommentsClick(View v, int position) {
-        final Intent intent = new Intent(this, CommentsActivity.class);
-        int[] startingLocation = new int[2];
-        v.getLocationOnScreen(startingLocation);
-        intent.putExtra(CommentsActivity.ARG_DRAWING_START_LOCATION, startingLocation[1]);
-        startActivity(intent);
-        overridePendingTransition(0, 0);
+    public void onBayarClick(View v, int itemPosition) {
+        showPaymentDialog();
     }
 
-    @Override
-    public void onMoreClick(View v, int itemPosition) {
-        FeedContextMenuManager.getInstance().toggleContextMenuFromView(v, itemPosition, this);
-    }
-
-    @Override
-    public void onProfileClick(View v) {
-        int[] startingLocation = new int[2];
-        v.getLocationOnScreen(startingLocation);
-        startingLocation[0] += v.getWidth() / 2;
-        UserProfileActivity.startUserProfileFromLocation(startingLocation, this);
-        overridePendingTransition(0, 0);
-    }
-
-    @Override
-    public void onReportClick(int feedItem) {
-        FeedContextMenuManager.getInstance().hideContextMenu();
-    }
-
-    @Override
-    public void onSharePhotoClick(int feedItem) {
-        FeedContextMenuManager.getInstance().hideContextMenu();
-    }
-
-    @Override
-    public void onCopyShareUrlClick(int feedItem) {
-        FeedContextMenuManager.getInstance().hideContextMenu();
-    }
-
-    @Override
-    public void onCancelClick(int feedItem) {
-        FeedContextMenuManager.getInstance().hideContextMenu();
-    }
-
-    @OnClick(R.id.btnCreate)
+    @OnClick(R.id.btnBuatTagihan)
     public void onTakePhotoClick() {
         int[] startingLocation = new int[2];
         fabCreate.getLocationOnScreen(startingLocation);
         startingLocation[0] += fabCreate.getWidth() / 2;
-        PublishActivity.openWithPhotoUri(this, null);
+        CreateDebitActivity.openWithPhotoUri(this, null);
         overridePendingTransition(0, 0);
     }
 
-    public void showLikedSnackbar() {
-        Snackbar.make(clContent, "Liked!", Snackbar.LENGTH_SHORT).show();
+    void showPaymentDialog() {
+
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.payment_dialog);
+        RadioGroup rg = (RadioGroup) dialog.findViewById(R.id.rg_payment_method);
+
+        Button btnBayar = (Button) dialog.findViewById(R.id.btnBayar);
+        btnBayar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
+
 }

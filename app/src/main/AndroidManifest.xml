@@ -22,31 +22,40 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.arm.hackbri.landmoney.view.activity.MainActivity"
+            android:name=".view.activity.CreditActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name="com.arm.hackbri.landmoney.view.activity.CommentsActivity"
+            android:name=".view.activity.CommentsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.TransparentActivity" />
         <activity
-            android:name="com.arm.hackbri.landmoney.view.activity.UserProfileActivity"
+            android:name=".view.activity.UserProfileActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.TransparentActivity" />
         <activity
-            android:name="com.arm.hackbri.landmoney.view.activity.PinjamanActivity"
+            android:name=".view.activity.DebitActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.TransparentActivity" />
         <activity
-            android:name="com.arm.hackbri.landmoney.view.activity.PublishActivity"
+            android:name=".view.activity.CreateCreditActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="stateHidden"/>
-
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".view.activity.CreateDebitActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".view.activity.LoginActivity" />
+        <activity android:name=".view.activity.DetailActivity" />
+        <activity android:name=".view.activity.AboutActivity" />
+        <activity android:name=".view.activity.RegisterActivity"></activity>
     </application>
 
 </manifest>

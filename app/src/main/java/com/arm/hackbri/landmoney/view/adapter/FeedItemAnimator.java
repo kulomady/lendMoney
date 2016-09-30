@@ -31,10 +31,10 @@ public class FeedItemAnimator extends DefaultItemAnimator {
 
     @Override
     public boolean animateAdd(RecyclerView.ViewHolder viewHolder) {
-        if (viewHolder.getItemViewType() == HutangAdapter.VIEW_TYPE_DEFAULT) {
+        if (viewHolder.getItemViewType() == CreditAdapter.VIEW_TYPE_DEFAULT) {
             if (viewHolder.getLayoutPosition() > lastAddAnimatedItem) {
                 lastAddAnimatedItem++;
-                runEnterAnimation((HutangAdapter.CellHutangViewHolder) viewHolder);
+                runEnterAnimation((CreditAdapter.CellHutangViewHolder) viewHolder);
                 return false;
             }
         }
@@ -43,7 +43,7 @@ public class FeedItemAnimator extends DefaultItemAnimator {
         return false;
     }
 
-    private void runEnterAnimation(final HutangAdapter.CellHutangViewHolder holder) {
+    private void runEnterAnimation(final CreditAdapter.CellHutangViewHolder holder) {
         final int screenHeight = Utils.getScreenHeight(holder.itemView.getContext());
         holder.itemView.setTranslationY(screenHeight);
         holder.itemView.animate()

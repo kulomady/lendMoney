@@ -5,14 +5,12 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import com.arm.hackbri.landmoney.R;
 import com.arm.hackbri.landmoney.Utils;
 
-/**
- * Created by froger_mcs on 15.12.14.
- */
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class FeedContextMenu extends LinearLayout {
     private static final int CONTEXT_MENU_WIDTH = Utils.dpToPx(240);
 
@@ -46,21 +44,21 @@ public class FeedContextMenu extends LinearLayout {
         ((ViewGroup) getParent()).removeView(FeedContextMenu.this);
     }
 
-    @OnClick(R.id.btnReport)
+    @OnClick(R.id.btnTask)
     public void onReportClick() {
         if (onItemClickListener != null) {
             onItemClickListener.onReportClick(feedItem);
         }
     }
 
-    @OnClick(R.id.btnSharePhoto)
+    @OnClick(R.id.btnInstantPayment)
     public void onSharePhotoClick() {
         if (onItemClickListener != null) {
             onItemClickListener.onSharePhotoClick(feedItem);
         }
     }
 
-    @OnClick(R.id.btnCopyShareUrl)
+    @OnClick(R.id.btnTransferBank)
     public void onCopyShareUrlClick() {
         if (onItemClickListener != null) {
             onItemClickListener.onCopyShareUrlClick(feedItem);

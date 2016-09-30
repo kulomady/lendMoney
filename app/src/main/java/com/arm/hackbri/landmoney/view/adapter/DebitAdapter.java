@@ -1,3 +1,10 @@
+/*
+ * Created By Kulomady on 9/30/16 1:41 PM
+ * Copyright (c) 2016. All rights reserved
+ *
+ * Last Modified 9/30/16 1:41 PM
+ */
+
 package com.arm.hackbri.landmoney.view.adapter;
 
 import android.content.Context;
@@ -6,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import com.arm.hackbri.landmoney.R;
@@ -18,7 +26,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class HutangAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class DebitAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public static final String ACTION_LIKE_BUTTON_CLICKED = "action_like_button_button";
     public static final String ACTION_LIKE_IMAGE_CLICKED = "action_like_image_button";
 
@@ -28,18 +36,18 @@ public class HutangAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private final List<FeedItem> feedItems = new ArrayList<>();
 
     private Context context;
-    private OnFeedItemClickListener onFeedItemClickListener;
+    private OnDebitClickListener onDebitClickListener;
 
     private boolean showLoadingView = false;
 
-    public HutangAdapter(Context context) {
+    public DebitAdapter(Context context) {
         this.context = context;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_DEFAULT) {
-            View view = LayoutInflater.from(context).inflate(R.layout.item_feed, parent, false);
+            View view = LayoutInflater.from(context).inflate(R.layout.item_debit, parent, false);
             CellHutangViewHolder cellHutangViewHolder = new CellHutangViewHolder(view);
             setupClickableViews(view, cellHutangViewHolder);
             return cellHutangViewHolder;
@@ -56,34 +64,10 @@ public class HutangAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     private void setupClickableViews(final View view, final CellHutangViewHolder cellHutangViewHolder) {
-//        cellHutangViewHolder.btnComments.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                onFeedItemClickListener.onCommentsClick(view, cellHutangViewHolder.getAdapterPosition());
-//            }
-//        });
-//        cellHutangViewHolder.btnMore.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                onFeedItemClickListener.onMoreClick(v, cellHutangViewHolder.getAdapterPosition());
-//            }
-//        });
-//
-//        cellHutangViewHolder.btnLike.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                int adapterPosition = cellHutangViewHolder.getAdapterPosition();
-//                feedItems.get(adapterPosition).likesCount++;
-//                notifyItemChanged(adapterPosition, ACTION_LIKE_BUTTON_CLICKED);
-//                if (context instanceof MainActivity) {
-//                    ((MainActivity) context).showLikedSnackbar();
-//                }
-//            }
-//        });
-        cellHutangViewHolder.ivUserProfile.setOnClickListener(new View.OnClickListener() {
+        cellHutangViewHolder.btnBayar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onFeedItemClickListener.onProfileClick(view);
+                onDebitClickListener.onBayarClick(v, cellHutangViewHolder.getAdapterPosition());
             }
         });
     }
@@ -140,8 +124,8 @@ public class HutangAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    public void setOnFeedItemClickListener(OnFeedItemClickListener onFeedItemClickListener) {
-        this.onFeedItemClickListener = onFeedItemClickListener;
+    public void setOnDebitClickListener(OnDebitClickListener onDebitClickListener) {
+        this.onDebitClickListener = onDebitClickListener;
     }
 
     public void showLoadingView() {
@@ -153,6 +137,9 @@ public class HutangAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         @Bind(R.id.ivUserProfile)
         ImageView ivUserProfile;
+
+        @Bind(R.id.btnBayar)
+        Button btnBayar;
 
 
         FeedItem feedItem;
@@ -166,9 +153,9 @@ public class HutangAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             this.feedItem = feedItem;
         }
 
-        public FeedItem getFeedItem() {
-            return feedItem;
-        }
+//        public FeedItem getFeedItem() {
+//            return feedItem;
+//        }
     }
 
     public static class LoadingCellHutangViewHolder extends CellHutangViewHolder {
@@ -196,11 +183,8 @@ public class HutangAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    public interface OnFeedItemClickListener {
-        void onCommentsClick(View v, int position);
+    public interface OnDebitClickListener {
+        void onBayarClick(View v, int position);
 
-        void onMoreClick(View v, int position);
-
-        void onProfileClick(View v);
     }
 }

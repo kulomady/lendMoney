@@ -11,24 +11,17 @@ import android.view.MenuItem;
 import android.view.ViewTreeObserver;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
-import android.widget.ToggleButton;
 
+import com.arm.hackbri.landmoney.R;
+import com.arm.hackbri.landmoney.Utils;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
-import butterknife.OnCheckedChanged;
 
-import com.arm.hackbri.landmoney.R;
-import com.arm.hackbri.landmoney.Utils;
-
-public class PublishActivity extends BaseActivity {
+public class CreateCreditActivity extends BaseActivity {
     public static final String ARG_TAKEN_PHOTO_URI = "arg_taken_photo_uri";
 
-    @Bind(R.id.tbFollowers)
-    ToggleButton tbFollowers;
-    @Bind(R.id.tbDirect)
-    ToggleButton tbDirect;
     @Bind(R.id.ivPhoto)
     ImageView ivPhoto;
 
@@ -37,7 +30,7 @@ public class PublishActivity extends BaseActivity {
     private int photoSize;
 
     public static void openWithPhotoUri(Activity openingActivity, Uri photoUri) {
-        Intent intent = new Intent(openingActivity, PublishActivity.class);
+        Intent intent = new Intent(openingActivity, CreateCreditActivity.class);
         intent.putExtra(ARG_TAKEN_PHOTO_URI, photoUri);
         openingActivity.startActivity(intent);
     }
@@ -45,7 +38,7 @@ public class PublishActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_publish);
+        setContentView(R.layout.activity_create_credit);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_grey600_24dp);
         photoSize = getResources().getDimensionPixelSize(R.dimen.publish_photo_thumbnail_size);
 
@@ -114,9 +107,9 @@ public class PublishActivity extends BaseActivity {
     }
 
     private void bringMainActivityToTop() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, CreditActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        intent.setAction(MainActivity.ACTION_SHOW_LOADING_ITEM);
+        intent.setAction(CreditActivity.ACTION_SHOW_LOADING_ITEM);
         startActivity(intent);
     }
 
@@ -124,23 +117,5 @@ public class PublishActivity extends BaseActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(ARG_TAKEN_PHOTO_URI, photoUri);
-    }
-
-    @OnCheckedChanged(R.id.tbFollowers)
-    public void onFollowersCheckedChange(boolean checked) {
-        if (!propagatingToggleState) {
-            propagatingToggleState = true;
-            tbDirect.setChecked(!checked);
-            propagatingToggleState = false;
-        }
-    }
-
-    @OnCheckedChanged(R.id.tbDirect)
-    public void onDirectCheckedChange(boolean checked) {
-        if (!propagatingToggleState) {
-            propagatingToggleState = true;
-            tbFollowers.setChecked(!checked);
-            propagatingToggleState = false;
-        }
     }
 }
