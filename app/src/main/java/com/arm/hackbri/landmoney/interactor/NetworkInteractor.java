@@ -1,9 +1,11 @@
 package com.arm.hackbri.landmoney.interactor;
 
 import com.arm.hackbri.landmoney.model.ParamNetwork;
+import com.arm.hackbri.landmoney.model.response.AcceptDebit;
 import com.arm.hackbri.landmoney.model.response.CreateDebitCredit;
 import com.arm.hackbri.landmoney.model.response.Credit;
 import com.arm.hackbri.landmoney.model.response.Debit;
+import com.arm.hackbri.landmoney.model.response.Invite;
 import com.arm.hackbri.landmoney.model.response.Profile;
 import com.arm.hackbri.landmoney.model.response.TBankSaldo;
 import com.arm.hackbri.landmoney.view.CreateCreditView;
@@ -20,6 +22,10 @@ public interface NetworkInteractor {
     void getCreditList(ParamNetwork paramNetwork, OnFetchDataListener<List<Credit>> onFetchDataListener);
 
     void login(ParamNetwork paramNetwork, OnFetchDataListener<Profile> onFetchDataListener);
+
+    void acceptDebit(ParamNetwork paramNetwork, OnFetchDataListener<AcceptDebit> onFetchDataListener);
+
+    void invite(ParamNetwork paramNetwork, OnFetchDataListener<Invite> onFetchDataListener);
 
     void register(ParamNetwork paramNetwork, OnFetchDataListener<Profile> onFetchDataListener);
 

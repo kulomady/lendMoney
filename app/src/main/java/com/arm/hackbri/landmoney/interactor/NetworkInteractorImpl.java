@@ -1,9 +1,11 @@
 package com.arm.hackbri.landmoney.interactor;
 
 import com.arm.hackbri.landmoney.model.ParamNetwork;
+import com.arm.hackbri.landmoney.model.response.AcceptDebit;
 import com.arm.hackbri.landmoney.model.response.CreateDebitCredit;
 import com.arm.hackbri.landmoney.model.response.Credit;
 import com.arm.hackbri.landmoney.model.response.Debit;
+import com.arm.hackbri.landmoney.model.response.Invite;
 import com.arm.hackbri.landmoney.model.response.Profile;
 import com.arm.hackbri.landmoney.model.response.Register;
 import com.arm.hackbri.landmoney.model.response.TBankSaldo;
@@ -134,6 +136,65 @@ public class NetworkInteractorImpl implements NetworkInteractor {
                     }
                 }));
     }
+
+    @Override
+    public void acceptDebit(ParamNetwork paramNetwork, final OnFetchDataListener<AcceptDebit> onFetchDataListener) {
+        compositeSubscription.add(LMService.getInstance().getApi().acceptDebit(paramNetwork.getParamMap())
+                .subscribeOn(Schedulers.newThread())
+                .unsubscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<LMResponse>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        onFetchDataListener.onFailedFetchData(e);
+                    }
+
+                    @Override
+                    public void onNext(LMResponse lmResponse) {
+                        AcceptDebit result = lmResponse.convertDataObj(AcceptDebit.class);
+                        if (result.getSuccess() == 1) {
+                            onFetchDataListener.onSuccessFetchData(result);
+                        } else {
+                            onFetchDataListener.onFailedFetchData(new GeneralErrorException("Gagal menerima debit"));
+                        }
+                    }
+                }));
+    }
+
+    @Override
+    public void invite(ParamNetwork paramNetwork, final OnFetchDataListener<Invite> onFetchDataListener) {
+        compositeSubscription.add(LMService.getInstance().getApi().invite(paramNetwork.getParamMap())
+                .subscribeOn(Schedulers.newThread())
+                .unsubscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<LMResponse>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        onFetchDataListener.onFailedFetchData(e);
+                    }
+
+                    @Override
+                    public void onNext(LMResponse lmResponse) {
+                        Invite result = lmResponse.convertDataObj(Invite.class);
+                        if (result.getSuccess() == 1) {
+                            onFetchDataListener.onSuccessFetchData(result);
+                        } else {
+                            onFetchDataListener.onFailedFetchData(new GeneralErrorException("User tidak ditemukan"));
+                        }
+                    }
+                }));
+    }
+
 
     @Override
     public void register(final ParamNetwork paramNetwork, final OnFetchDataListener<Profile> onFetchDataListener) {
