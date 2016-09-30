@@ -36,17 +36,21 @@ public interface LMApi {
     @POST(LMEndpointURL.PATH_GET_TBANK_SALDO)
     Observable<LMResponse> getTBankSaldo(@FieldMap Map<String, String> params);
 
-    @GET(LMEndpointURL.PATH_GET_DEBIT_LIST)
-    Observable<LMResponse> getDebitList(@QueryMap Map<String, String> params);
+    @FormUrlEncoded
+    @POST(LMEndpointURL.PATH_GET_DEBIT_LIST)
+    Observable<LMResponse> getDebitList(@FieldMap Map<String, String> params);
 
-    @GET(LMEndpointURL.PATH_GET_CREDIT_LIST)
-    Observable<LMResponse> getCreditList(@QueryMap Map<String, String> params);
+    @FormUrlEncoded
+    @POST(LMEndpointURL.PATH_GET_CREDIT_LIST)
+    Observable<LMResponse> getCreditList(@FieldMap Map<String, String> params);
 
-    @GET(LMEndpointURL.PATH_GET_DIALOG_NEW_CREDIT)
-    Observable<LMResponse> getDialogNewCredit(@QueryMap Map<String, String> params);
+    @FormUrlEncoded
+    @POST(LMEndpointURL.PATH_GET_DIALOG_NEW_CREDIT)
+    Observable<LMResponse> getDialogNewCredit(@FieldMap Map<String, String> params);
 
-    @GET(LMEndpointURL.PATH_GET_DIALOG_NEW_DEBIT)
-    Observable<LMResponse> getDialogNewDebit(@QueryMap Map<String, String> params);
+    @FormUrlEncoded
+    @POST(LMEndpointURL.PATH_GET_DIALOG_NEW_DEBIT)
+    Observable<LMResponse> getDialogNewDebit(@FieldMap Map<String, String> params);
 
     @FormUrlEncoded
     @POST(LMEndpointURL.PATH_GET_CREDIT_LIST)
@@ -60,7 +64,9 @@ public interface LMApi {
     @POST(LMEndpointURL.PATH_CREATE_CREDIT)
     Observable<LMResponse> createCredit(@FieldMap Map<String, String> params);
 
-
+    //======================================
+    //BUSUK GAK KEPAKE
+    //=======================================
     @GET(LMEndpointURL.PATH_GET_CREDIT_LIST)
     Observable<LMResponse> getDetailPinjaman(@QueryMap Map<String, String> params);
 
