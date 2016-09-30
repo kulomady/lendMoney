@@ -1,7 +1,11 @@
 package com.arm.hackbri.landmoney.presenter;
 
+import android.app.Activity;
+
 import com.arm.hackbri.landmoney.interactor.NetworkInteractorImpl;
 import com.arm.hackbri.landmoney.interactor.OnFetchDataListener;
+import com.arm.hackbri.landmoney.interactor.PreferencesInteractor;
+import com.arm.hackbri.landmoney.interactor.PreferencesInteractorImpl;
 import com.arm.hackbri.landmoney.model.ParamNetwork;
 import com.arm.hackbri.landmoney.model.response.Profile;
 import com.arm.hackbri.landmoney.network.exception.GeneralErrorException;
@@ -19,20 +23,23 @@ import java.net.UnknownHostException;
 public class LoginPresenterImpl implements LoginPresenter {
     private final LoginView viewListener;
     private final NetworkInteractorImpl netDataInteractor;
+    private final PreferencesInteractor preferencesInteractor;
 
     public LoginPresenterImpl(LoginView loginView) {
         this.viewListener = loginView;
         this.netDataInteractor = new NetworkInteractorImpl();
+        this.preferencesInteractor = new PreferencesInteractorImpl();
     }
 
     @Override
-    public void processPostLogin() {
+    public void processPostLogin(final Activity activity) {
         netDataInteractor.login(new ParamNetwork.Builder().put("phone", viewListener.getPhoneNumber())
                 .put("password", viewListener.getPassword())
                 .build(), new OnFetchDataListener<Profile>() {
             @Override
             public void onSuccessFetchData(Profile data) {
                 viewListener.renderProfileData(data);
+                preferencesInteractor.storeUserData(activity, data);
             }
 
             @Override

@@ -24,4 +24,6 @@ public interface CreditListView {
     void renderErrorConnection(String messageError);
 
     void renderErrorUnknown(String messageError);
+
+    void renderUserNotLogin();
 }

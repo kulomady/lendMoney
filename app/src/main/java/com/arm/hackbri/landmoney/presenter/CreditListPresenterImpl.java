@@ -1,5 +1,7 @@
 package com.arm.hackbri.landmoney.presenter;
 
+import android.app.Activity;
+
 import com.arm.hackbri.landmoney.interactor.NetworkInteractorImpl;
 import com.arm.hackbri.landmoney.interactor.OnFetchDataListener;
 import com.arm.hackbri.landmoney.model.ParamNetwork;
@@ -27,7 +29,7 @@ public class CreditListPresenterImpl implements CreditListPresenter {
     }
 
     @Override
-    public void processFetchCreditList() {
+    public void processFetchCreditList(Activity activity) {
         netInteractor.getDebitList(new ParamNetwork.Builder().put("", "").build(), new OnFetchDataListener<List<Debit>>() {
             @Override
             public void onSuccessFetchData(List<Debit> debitList) {
