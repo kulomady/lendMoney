@@ -35,6 +35,7 @@ import com.arm.hackbri.landmoney.interactor.PreferencesInteractorImpl;
 import com.arm.hackbri.landmoney.model.ParamNetwork;
 import com.arm.hackbri.landmoney.model.response.Credit;
 import com.arm.hackbri.landmoney.model.response.Profile;
+import com.arm.hackbri.landmoney.model.response.TBankSaldo;
 import com.arm.hackbri.landmoney.presenter.CreditListPresenter;
 import com.arm.hackbri.landmoney.presenter.CreditListPresenterImpl;
 import com.arm.hackbri.landmoney.view.CreditListView;
@@ -223,11 +224,11 @@ public class CreditActivity extends BaseDrawerActivity implements CreditAdapter.
 
 
     @Override
-    public void onBayarClick(View v, int position) {
-       showPaymentDialog();
+    public void onBayarClick(View v, int position,String debt_id) {
+       showPaymentDialog(debt_id);
     }
 
-    void showPaymentDialog() {
+    void showPaymentDialog(final String debt_id) {
 
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -239,10 +240,32 @@ public class CreditActivity extends BaseDrawerActivity implements CreditAdapter.
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
+                processTransfer(debt_id);
             }
         });
 
         dialog.show();
+    }
+
+    private void processTransfer(String debt_id) {
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Transferring");
+        progressDialog.show();
+        NetworkInteractor networkInteractor = new NetworkInteractorImpl();
+        ParamNetwork.Builder builder = new ParamNetwork.Builder();
+        builder.put("debt_id", debt_id);
+        networkInteractor.transfer(builder.build(), new OnFetchDataListener<TBankSaldo>() {
+            @Override
+            public void onSuccessFetchData(TBankSaldo data) {
+                progressDialog.dismiss();
+                creditListPresenter.processFetchCreditList(CreditActivity.this);
+            }
+
+            @Override
+            public void onFailedFetchData(Throwable throwable) {
+                progressDialog.dismiss();
+            }
+        });
     }
 
     @Override
