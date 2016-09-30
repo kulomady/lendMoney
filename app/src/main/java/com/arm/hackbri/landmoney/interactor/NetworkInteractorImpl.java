@@ -91,7 +91,7 @@ public class NetworkInteractorImpl implements NetworkInteractor {
                 .map(new Func1<LMResponse, Profile>() {
                     @Override
                     public Profile call(LMResponse lmResponse) {
-                        return lmResponse.convertDataObj(Profile.class);
+                        return lmResponse.convertDataList(Profile[].class).get(0);
                     }
                 })
                 .flatMap(new Func1<Profile, Observable<Profile>>() {

@@ -33,8 +33,8 @@ public class LoginPresenterImpl implements LoginPresenter {
 
     @Override
     public void processPostLogin(final Activity activity) {
-        netDataInteractor.login(new ParamNetwork.Builder().put("phone", viewListener.getPhoneNumber())
-                .put("password", viewListener.getPassword())
+        netDataInteractor.login(new ParamNetwork.Builder().put("user_phone", viewListener.getPhoneNumber())
+                .put("user_password", viewListener.getPassword())
                 .build(), new OnFetchDataListener<Profile>() {
             @Override
             public void onSuccessFetchData(Profile data) {
