@@ -11,12 +11,15 @@ package com.arm.hackbri.landmoney.view.activity;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -24,12 +27,18 @@ import android.view.View;
 import android.view.Window;
 import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 
 import com.arm.hackbri.landmoney.R;
 import com.arm.hackbri.landmoney.Utils;
+import com.arm.hackbri.landmoney.interactor.NetworkInteractor;
+import com.arm.hackbri.landmoney.interactor.NetworkInteractorImpl;
+import com.arm.hackbri.landmoney.interactor.OnFetchDataListener;
+import com.arm.hackbri.landmoney.model.ParamNetwork;
 import com.arm.hackbri.landmoney.model.response.Debit;
+import com.arm.hackbri.landmoney.model.response.Profile;
 import com.arm.hackbri.landmoney.presenter.DebitListPresenter;
 import com.arm.hackbri.landmoney.presenter.DebitListPresenterImpl;
 import com.arm.hackbri.landmoney.view.DebitListView;
@@ -62,6 +71,7 @@ public class DebitActivity extends BaseDrawerActivity implements DebitAdapter.On
 
     private boolean pendingIntroAnimation;
     private DebitListPresenter debitListPresenter;
+    private String phoneValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,10 +160,14 @@ public class DebitActivity extends BaseDrawerActivity implements DebitAdapter.On
 
     @OnClick(R.id.btnBuatTagihan)
     public void onTakePhotoClick() {
+        showCreateDebitDialog();
+    }
+
+    private void navigateToCreateDebit(Profile profileTarget) {
         int[] startingLocation = new int[2];
         fabCreate.getLocationOnScreen(startingLocation);
         startingLocation[0] += fabCreate.getWidth() / 2;
-        CreateDebitActivity.openWithPhotoUri(this);
+        CreateDebitActivity.openActivity(this,profileTarget);
         overridePendingTransition(0, 0);
     }
 
@@ -242,5 +256,68 @@ public class DebitActivity extends BaseDrawerActivity implements DebitAdapter.On
 
     void showMessageSnackBar(String message) {
         Snackbar.make(clContent, message, Snackbar.LENGTH_LONG).show();
+    }
+
+    void showCreateDebitDialog() {
+
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.debit_dialog);
+
+        Button btnBayar = (Button) dialog.findViewById(R.id.btnCari);
+        final EditText editText = (EditText) dialog.findViewById(R.id.edtCariNoHp);
+        btnBayar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                phoneValue = editText.getText().toString();
+                processCreateDebit();
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void processCreateDebit() {
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading");
+        progressDialog.show();
+        NetworkInteractor interactor = new NetworkInteractorImpl();
+        ParamNetwork.Builder builder = new ParamNetwork.Builder();
+        builder.put("user_phone", phoneValue);
+        interactor.getDialogNewDebit(builder.build(), new OnFetchDataListener<Profile>() {
+            @Override
+            public void onSuccessFetchData(Profile data) {
+                progressDialog.dismiss();
+                navigateToCreateDebit(data);
+            }
+
+            @Override
+            public void onFailedFetchData(Throwable throwable) {
+                progressDialog.dismiss();
+                showDialogInvite();
+            }
+        });
+    }
+
+    private void showDialogInvite() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder
+                .setMessage("User ini belum terdafar apakah mau mengundangnya ")
+                .setPositiveButton("Yes",  new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Yes-code
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog,int id) {
+                        dialog.cancel();
+                    }
+                })
+                .show();
+
     }
 }

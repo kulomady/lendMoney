@@ -80,21 +80,6 @@
                         android:hint="Jumlah" />
                 </android.support.design.widget.TextInputLayout>
 
-                <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/rg_payment_method"
-                    android:orientation="vertical">
-                    <RadioButton android:id="@+id/bayar_sekarang"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Bayar Sekarang" />
-                    <RadioButton android:id="@+id/bayar_nanti"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Bayar Nanti" />
-                </RadioGroup>
-
                 <Button
                     android:id="@+id/btnSubmit"
                     android:layout_width="wrap_content"

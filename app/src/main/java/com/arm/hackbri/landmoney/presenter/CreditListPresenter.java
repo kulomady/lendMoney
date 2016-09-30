@@ -10,4 +10,6 @@ import android.app.Activity;
 public interface CreditListPresenter {
 
     void processFetchCreditList(Activity activity);
+
+    void bayarCredit(Activity activity);
 }

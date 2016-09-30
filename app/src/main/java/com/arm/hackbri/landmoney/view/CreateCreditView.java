@@ -13,6 +13,8 @@ public interface CreateCreditView {
 
     void renderErrorUnknown(String messageError);
 
+    void successedCreateCredit();
+
     String getPhoneNumber();
 
     int getAmount();
