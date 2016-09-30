@@ -2,11 +2,10 @@ package com.arm.hackbri.landmoney.view.activity;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -14,10 +13,16 @@ import android.widget.Toast;
 
 import com.arm.hackbri.landmoney.R;
 import com.arm.hackbri.landmoney.Utils;
+import com.arm.hackbri.landmoney.interactor.PreferencesInteractor;
+import com.arm.hackbri.landmoney.interactor.PreferencesInteractorImpl;
+import com.arm.hackbri.landmoney.model.response.Profile;
+import com.arm.hackbri.landmoney.presenter.CreateCreditPresenter;
+import com.arm.hackbri.landmoney.presenter.CreateCreditPresenterImpl;
 import com.arm.hackbri.landmoney.view.CreateCreditView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class CreateCreditActivity extends BaseActivity implements CreateCreditView {
     @Bind(R.id.task_create_credit)
@@ -29,9 +34,17 @@ public class CreateCreditActivity extends BaseActivity implements CreateCreditVi
     EditText edtPhoneNumber;
     @Bind(R.id.rg_payment_method)
     RadioGroup rgPaymentMethod;
+    PreferencesInteractor preferencesInteractor;
 
-    public static void openWithPhotoUri(Activity openingActivity) {
+    private CreateCreditPresenter createCreditPresenter;
+    private static final String PROFILE_KEY="profileKey";
+    private Profile profileTarget;
+    private ProgressDialog progressDialog;
+
+
+    public static void openWithPhotoUri(Activity openingActivity, Profile profileTarget) {
         Intent intent = new Intent(openingActivity, CreateCreditActivity.class);
+        intent.putExtra(PROFILE_KEY, profileTarget);
         openingActivity.startActivity(intent);
     }
 
@@ -41,8 +54,12 @@ public class CreateCreditActivity extends BaseActivity implements CreateCreditVi
         setContentView(R.layout.activity_create_credit);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_grey600_24dp);
         updateStatusBarColor();
-
+        profileTarget = getIntent().getParcelableExtra(PROFILE_KEY);
         ButterKnife.bind(this);
+        this.createCreditPresenter = new CreateCreditPresenterImpl(this);
+        preferencesInteractor = new PreferencesInteractorImpl();
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading");
 
     }
 
@@ -53,26 +70,10 @@ public class CreateCreditActivity extends BaseActivity implements CreateCreditVi
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_publish, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_publish) {
-            bringMainActivityToTop();
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
-    }
-
     private void bringMainActivityToTop() {
         Intent intent = new Intent(this, CreditActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        intent.setAction(CreditActivity.ACTION_SHOW_LOADING_ITEM);
+//        intent.setAction(CreditActivity.ACTION_SHOW_LOADING_ITEM);
         startActivity(intent);
     }
 
@@ -93,6 +94,12 @@ public class CreateCreditActivity extends BaseActivity implements CreateCreditVi
     }
 
     @Override
+    public void successedCreateCredit() {
+        progressDialog.dismiss();
+        bringMainActivityToTop();
+    }
+
+    @Override
     public String getPhoneNumber() {
         return edtPhoneNumber.getText().toString();
     }
@@ -105,6 +112,12 @@ public class CreateCreditActivity extends BaseActivity implements CreateCreditVi
     @Override
     public String getDescription() {
         return null;
+    }
+
+    @OnClick(R.id.btnSubmit)
+    void onSubmitClicked() {
+        progressDialog.show();
+        createCreditPresenter.processCreateCredit(this, profileTarget.getUserId().toString() );
     }
 
     private void showMessage(String messageError) {

@@ -19,4 +19,5 @@ public interface CreateDebitView {
 
     String getDescription();
 
+    void successCreateDebit();
 }

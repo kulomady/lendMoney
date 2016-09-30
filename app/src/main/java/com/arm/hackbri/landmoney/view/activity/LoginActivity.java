@@ -15,6 +15,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.arm.hackbri.landmoney.R;
+import com.arm.hackbri.landmoney.interactor.PreferencesInteractor;
+import com.arm.hackbri.landmoney.interactor.PreferencesInteractorImpl;
 import com.arm.hackbri.landmoney.model.response.Profile;
 import com.arm.hackbri.landmoney.presenter.LoginPresenter;
 import com.arm.hackbri.landmoney.presenter.LoginPresenterImpl;
@@ -34,12 +36,22 @@ public class LoginActivity extends Activity implements LoginView {
     LoginPresenter loginPresenter;
     ProgressDialog progressDialog;
 
+    PreferencesInteractor preferencesInteractor;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+        preferencesInteractor = new PreferencesInteractorImpl();
+        if (preferencesInteractor.isLogin(this)) {
+            CreditActivity.openActivity(this);
+            this.finish();
+        }
+
         this.loginPresenter = new LoginPresenterImpl(this);
+
         this.progressDialog = new ProgressDialog(this);
         this.progressDialog.setMessage("Please Wait");
     }
@@ -56,7 +68,7 @@ public class LoginActivity extends Activity implements LoginView {
 
     @Override
     public void renderProfileData(Profile profile) {
-        CreditActivity.openActivity(this, profile);
+        CreditActivity.openActivity(this);
     }
 
     @Override

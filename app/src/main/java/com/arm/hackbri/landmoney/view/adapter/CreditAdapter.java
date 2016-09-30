@@ -64,6 +64,7 @@ public class CreditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             }
         });
 
+
     }
 
     @Override
@@ -86,6 +87,7 @@ public class CreditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             }
         });
         holder.loadingFeedItemView.startLoading();
+
     }
 
     private void bindItemDebit(CellHutangViewHolder viewHolder, Credit credit) {

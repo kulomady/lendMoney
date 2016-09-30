@@ -9,34 +9,45 @@ package com.arm.hackbri.landmoney.view.activity;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.arm.hackbri.landmoney.R;
 import com.arm.hackbri.landmoney.Utils;
+import com.arm.hackbri.landmoney.model.response.Profile;
+import com.arm.hackbri.landmoney.presenter.CreateDebitPresenter;
+import com.arm.hackbri.landmoney.presenter.CreateDebitPresenterImpl;
 import com.arm.hackbri.landmoney.view.CreateDebitView;
 
 import butterknife.Bind;
+import butterknife.OnClick;
 
 public class CreateDebitActivity extends BaseActivity implements CreateDebitView{
 
+    private static final String PROFILE_KEY = "keyProfileDebit";
     @Bind(R.id.task_create_debit)
     TextView taskCreateDebit;
     @Bind(R.id.input_amount)
     EditText edtAmount;
     @Bind(R.id.input_phonenumber)
     EditText edtPhoneNumber;
-    @Bind(R.id.rg_payment_method)
-    RadioGroup rgPaymentMethod;
-    public static void openWithPhotoUri(Activity openingActivity) {
+
+    private String phoneValue;
+    private Profile profileTarget;
+
+    private CreateDebitPresenter debitPresenter;
+    private ProgressDialog progressDialog;
+
+    public static void openActivity(Activity openingActivity, Profile profileTarget) {
         Intent intent = new Intent(openingActivity, CreateDebitActivity.class);
+        intent.putExtra(PROFILE_KEY, profileTarget);
         openingActivity.startActivity(intent);
 
     }
@@ -48,6 +59,10 @@ public class CreateDebitActivity extends BaseActivity implements CreateDebitView
 //        ButterKnife.bind(this);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_grey600_24dp);
         updateStatusBarColor();
+        profileTarget = getIntent().getParcelableExtra(PROFILE_KEY);
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading");
+        debitPresenter = new CreateDebitPresenterImpl(this);
 
     }
 
@@ -77,7 +92,7 @@ public class CreateDebitActivity extends BaseActivity implements CreateDebitView
     }
 
     private void bringMainActivityToTop() {
-        Intent intent = new Intent(this, CreditActivity.class);
+        Intent intent = new Intent(this, DebitActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.setAction(CreditActivity.ACTION_SHOW_LOADING_ITEM);
         startActivity(intent);
@@ -113,8 +128,22 @@ public class CreateDebitActivity extends BaseActivity implements CreateDebitView
         return null;
     }
 
+    @Override
+    public void successCreateDebit() {
+        progressDialog.dismiss();
+        bringMainActivityToTop();
+    }
+
 
     private void showMessage(String messageError) {
         Toast.makeText(this, messageError, Toast.LENGTH_SHORT).show();
     }
+
+    @OnClick(R.id.btnSubmit)
+    void btnSubmitClicked() {
+        progressDialog.show();
+        debitPresenter.processCreateDebit(this,profileTarget.getUserId().toString());
+    }
+
+
 }

@@ -41,7 +41,7 @@ public class CreateDebitPresenterImpl implements CreateDebitPresenter {
         netInteractor.createNewDebit(builder.build(), new OnFetchDataListener<CreateDebitCredit>() {
             @Override
             public void onSuccessFetchData(CreateDebitCredit data) {
-
+                viewListener.successCreateDebit();
             }
 
             @Override

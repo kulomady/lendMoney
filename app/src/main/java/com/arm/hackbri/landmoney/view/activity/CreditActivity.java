@@ -5,12 +5,15 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -18,11 +21,18 @@ import android.view.View;
 import android.view.Window;
 import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 
 import com.arm.hackbri.landmoney.R;
 import com.arm.hackbri.landmoney.Utils;
+import com.arm.hackbri.landmoney.interactor.NetworkInteractor;
+import com.arm.hackbri.landmoney.interactor.NetworkInteractorImpl;
+import com.arm.hackbri.landmoney.interactor.OnFetchDataListener;
+import com.arm.hackbri.landmoney.interactor.PreferencesInteractor;
+import com.arm.hackbri.landmoney.interactor.PreferencesInteractorImpl;
+import com.arm.hackbri.landmoney.model.ParamNetwork;
 import com.arm.hackbri.landmoney.model.response.Credit;
 import com.arm.hackbri.landmoney.model.response.Profile;
 import com.arm.hackbri.landmoney.presenter.CreditListPresenter;
@@ -42,7 +52,6 @@ public class CreditActivity extends BaseDrawerActivity implements CreditAdapter.
         FeedContextMenu.OnFeedContextMenuItemClickListener, CreditListView {
     public static final String ACTION_SHOW_LOADING_ITEM = "action_show_loading_item";
 
-    private static final String PROFILE_INTENT_KEY = "profileKey";
     private static final int ANIM_DURATION_TOOLBAR = 300;
     private static final int ANIM_DURATION_FAB = 400;
 
@@ -53,6 +62,8 @@ public class CreditActivity extends BaseDrawerActivity implements CreditAdapter.
     @Bind(R.id.content)
     CoordinatorLayout clContent;
 
+    private String phoneValue;
+
     @Bind(R.id.credit_progressbar)
     ProgressBar creditProgressBar;
 
@@ -60,11 +71,12 @@ public class CreditActivity extends BaseDrawerActivity implements CreditAdapter.
     private CreditListPresenter creditListPresenter;
 
     private Profile profile;
+    private PreferencesInteractor preferencesInteractor;
 
     private boolean pendingIntroAnimation;
-    public static void openActivity(Activity openingActivity,Profile profile) {
+    public static void openActivity(Activity openingActivity) {
         Intent intent = new Intent(openingActivity, CreditActivity.class);
-        intent.putExtra(PROFILE_INTENT_KEY, profile);
+
         openingActivity.startActivity(intent);
     }
 
@@ -73,10 +85,11 @@ public class CreditActivity extends BaseDrawerActivity implements CreditAdapter.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_credit);
 
-        profile = getIntent().getParcelableExtra(PROFILE_INTENT_KEY);
+
         creditListPresenter = new CreditListPresenterImpl(this);
         creditListPresenter.processFetchCreditList(this);
-
+        preferencesInteractor = new PreferencesInteractorImpl();
+        profile = preferencesInteractor.getUserData(this);
         if (profile != null) {
             setSaldo("Rp." + String.valueOf(profile.gettBankSaldo().getSaldo()));
             setUsernameText(profile.getUserName());
@@ -196,10 +209,15 @@ public class CreditActivity extends BaseDrawerActivity implements CreditAdapter.
 
     @OnClick(R.id.btnCreate)
     public void onTakePhotoClick() {
+//        navigateToCreateCredit();
+        showCreateCreditDialog();
+    }
+
+    private void navigateToCreateCredit(Profile profile) {
         int[] startingLocation = new int[2];
         fabCreate.getLocationOnScreen(startingLocation);
         startingLocation[0] += fabCreate.getWidth() / 2;
-        CreateCreditActivity.openWithPhotoUri(this);
+        CreateCreditActivity.openWithPhotoUri(this,profile);
         overridePendingTransition(0, 0);
     }
 
@@ -271,5 +289,68 @@ public class CreditActivity extends BaseDrawerActivity implements CreditAdapter.
 
     void showSnackBarError(String message) {
         Snackbar.make(clContent, message, Snackbar.LENGTH_LONG).show();
+    }
+
+    void showCreateCreditDialog() {
+
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.credit_dialog);
+
+        Button btnBayar = (Button) dialog.findViewById(R.id.btnCari);
+        final EditText editText = (EditText) dialog.findViewById(R.id.edtCariNoHp);
+        btnBayar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                phoneValue = editText.getText().toString();
+                processCreateCreditDialog();
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void processCreateCreditDialog() {
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading");
+        progressDialog.show();
+        NetworkInteractor interactor = new NetworkInteractorImpl();
+        ParamNetwork.Builder builder = new ParamNetwork.Builder();
+        builder.put("user_phone", phoneValue);
+        interactor.getDialogNewCredit(builder.build(), new OnFetchDataListener<Profile>() {
+            @Override
+            public void onSuccessFetchData(Profile data) {
+                progressDialog.dismiss();
+                navigateToCreateCredit(data);
+            }
+
+            @Override
+            public void onFailedFetchData(Throwable throwable) {
+                progressDialog.dismiss();
+                showDialogInvite();
+            }
+        });
+    }
+
+    private void showDialogInvite() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder
+                .setMessage("User ini belum terdafar apakah mau mengundangnya ")
+                .setPositiveButton("Yes",  new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Yes-code
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog,int id) {
+                        dialog.cancel();
+                    }
+                })
+                .show();
+
     }
 }

@@ -8,7 +8,6 @@ import com.arm.hackbri.landmoney.interactor.PreferencesInteractor;
 import com.arm.hackbri.landmoney.interactor.PreferencesInteractorImpl;
 import com.arm.hackbri.landmoney.model.ParamNetwork;
 import com.arm.hackbri.landmoney.model.response.Credit;
-import com.arm.hackbri.landmoney.model.response.Debit;
 import com.arm.hackbri.landmoney.model.response.Profile;
 import com.arm.hackbri.landmoney.network.exception.GeneralErrorException;
 import com.arm.hackbri.landmoney.network.exception.HttpErrorException;
@@ -63,6 +62,11 @@ public class CreditListPresenterImpl implements CreditListPresenter {
         } else {
             viewListener.renderUserNotLogin();
         }
+
+    }
+
+    @Override
+    public void bayarCredit(Activity activity) {
 
     }
 }

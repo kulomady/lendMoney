@@ -41,7 +41,7 @@ public class CreateCreditPresenterImpl implements CreateCreditPresenter {
         netInteractor.createNewCredit(builder.build(), new OnFetchDataListener<CreateDebitCredit>() {
             @Override
             public void onSuccessFetchData(CreateDebitCredit data) {
-
+                viewListener.successedCreateCredit();
             }
 
             @Override
