@@ -1,11 +1,14 @@
 package com.arm.hackbri.landmoney.interactor;
 
 import com.arm.hackbri.landmoney.model.ParamNetwork;
+import com.arm.hackbri.landmoney.model.response.CreateDebitCredit;
 import com.arm.hackbri.landmoney.model.response.Credit;
 import com.arm.hackbri.landmoney.model.response.Debit;
 import com.arm.hackbri.landmoney.model.response.Profile;
+import com.arm.hackbri.landmoney.model.response.Register;
 import com.arm.hackbri.landmoney.model.response.TBankSaldo;
 import com.arm.hackbri.landmoney.network.LMResponse;
+import com.arm.hackbri.landmoney.network.exception.GeneralErrorException;
 import com.arm.hackbri.landmoney.network.serviceapi.LMService;
 
 import java.util.List;
@@ -135,7 +138,7 @@ public class NetworkInteractorImpl implements NetworkInteractor {
                 .flatMap(new Func1<LMResponse, Observable<LMResponse>>() {
                     @Override
                     public Observable<LMResponse> call(LMResponse lmResponse) {
-                        if (lmResponse.getJsonData().getAsJsonObject().get("success").getAsInt() == 1)
+                        if (lmResponse.convertDataObj(Register.class).getSuccess() == 1)
                             return LMService.getInstance().getApi().login(paramNetwork.getParamMap());
                         else
                             throw new RuntimeException("Registrasi gagal");
@@ -163,7 +166,7 @@ public class NetworkInteractorImpl implements NetworkInteractor {
     }
 
     @Override
-    public void createNewCredit(ParamNetwork paramNetwork, final OnFetchDataListener<Object> onFetchDataListener) {
+    public void createNewCredit(ParamNetwork paramNetwork, final OnFetchDataListener<CreateDebitCredit> onFetchDataListener) {
         compositeSubscription.add(LMService.getInstance().getApi().createCredit(paramNetwork.getParamMap())
                 .subscribeOn(Schedulers.newThread())
                 .unsubscribeOn(Schedulers.newThread())
@@ -181,13 +184,18 @@ public class NetworkInteractorImpl implements NetworkInteractor {
 
                     @Override
                     public void onNext(LMResponse lmResponse) {
-                        onFetchDataListener.onSuccessFetchData(lmResponse.convertDataObj(TBankSaldo.class));
+                        CreateDebitCredit result = lmResponse.convertDataObj(CreateDebitCredit.class);
+                        if (result.getSuccess() == 1) {
+                            onFetchDataListener.onSuccessFetchData(lmResponse.convertDataObj(CreateDebitCredit.class));
+                        } else {
+                            onFetchDataListener.onFailedFetchData(new GeneralErrorException("Gagal mengajukan credit"));
+                        }
                     }
                 }));
     }
 
     @Override
-    public void createNewDebit(ParamNetwork paramNetwork, final OnFetchDataListener<Object> onFetchDataListener) {
+    public void createNewDebit(ParamNetwork paramNetwork, final OnFetchDataListener<CreateDebitCredit> onFetchDataListener) {
         compositeSubscription.add(LMService.getInstance().getApi().createDebit(paramNetwork.getParamMap())
                 .subscribeOn(Schedulers.newThread())
                 .unsubscribeOn(Schedulers.newThread())
@@ -205,7 +213,12 @@ public class NetworkInteractorImpl implements NetworkInteractor {
 
                     @Override
                     public void onNext(LMResponse lmResponse) {
-                        onFetchDataListener.onSuccessFetchData(lmResponse.convertDataObj(TBankSaldo.class));
+                        CreateDebitCredit result = lmResponse.convertDataObj(CreateDebitCredit.class);
+                        if (result.getSuccess() == 1) {
+                            onFetchDataListener.onSuccessFetchData(lmResponse.convertDataObj(CreateDebitCredit.class));
+                        } else {
+                            onFetchDataListener.onFailedFetchData(new GeneralErrorException("Gagal mengajukan debit"));
+                        }
                     }
                 }));
     }
@@ -316,6 +329,10 @@ public class NetworkInteractorImpl implements NetworkInteractor {
                 }));
     }
 
+
+    //==============================================
+    //  GA KEPAKEK
+    //==============================================
     @Override
     public void getDebitDetail(ParamNetwork paramNetwork, OnFetchDataListener<?> onFetchDataListener) {
         compositeSubscription.add(LMService.getInstance().getApi().getDetailPinjaman(paramNetwork.getParamMap())

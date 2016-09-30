@@ -7,6 +7,7 @@ import com.arm.hackbri.landmoney.interactor.OnFetchDataListener;
 import com.arm.hackbri.landmoney.interactor.PreferencesInteractor;
 import com.arm.hackbri.landmoney.interactor.PreferencesInteractorImpl;
 import com.arm.hackbri.landmoney.model.ParamNetwork;
+import com.arm.hackbri.landmoney.model.response.CreateDebitCredit;
 import com.arm.hackbri.landmoney.network.exception.GeneralErrorException;
 import com.arm.hackbri.landmoney.network.exception.HttpErrorException;
 import com.arm.hackbri.landmoney.view.CreateDebitView;
@@ -37,9 +38,9 @@ public class CreateDebitPresenterImpl implements CreateDebitPresenter {
         builder.put("to_user_id", userIdTarget);
         builder.put("amt", viewListener.getAmount() + "");
         builder.put("desc", viewListener.getDescription());
-        netInteractor.createNewDebit(builder.build(), new OnFetchDataListener<Object>() {
+        netInteractor.createNewDebit(builder.build(), new OnFetchDataListener<CreateDebitCredit>() {
             @Override
-            public void onSuccessFetchData(Object data) {
+            public void onSuccessFetchData(CreateDebitCredit data) {
 
             }
 
