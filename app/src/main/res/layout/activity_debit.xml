@@ -1,3 +1,10 @@
+<!--
+  ~ Created By Kulomady on 9/30/16 1:16 PM
+  ~ Copyright (c) 2016. All rights reserved
+  ~
+  ~ Last Modified 9/30/16 9:49 AM
+  -->
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -16,8 +23,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="none"
+            android:background="#FFFFFF"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
+        <ProgressBar
+            android:id="@+id/debit_progressBar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:visibility="gone"
+            android:layout_gravity="center"/>
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appBarLayout"
@@ -30,7 +43,7 @@
         </android.support.design.widget.AppBarLayout>
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/btnCreate"
+            android:id="@+id/btnBuatTagihan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"

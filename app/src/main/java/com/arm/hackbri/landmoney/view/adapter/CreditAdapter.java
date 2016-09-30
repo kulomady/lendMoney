@@ -6,40 +6,38 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import com.arm.hackbri.landmoney.R;
+import com.arm.hackbri.landmoney.model.response.Credit;
 import com.arm.hackbri.landmoney.view.viewComponent.LoadingFeedItemView;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class HutangAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    public static final String ACTION_LIKE_BUTTON_CLICKED = "action_like_button_button";
-    public static final String ACTION_LIKE_IMAGE_CLICKED = "action_like_image_button";
-
+public class CreditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public static final int VIEW_TYPE_DEFAULT = 1;
     public static final int VIEW_TYPE_LOADER = 2;
 
-    private final List<FeedItem> feedItems = new ArrayList<>();
+    private final List<Credit> credits;
 
     private Context context;
-    private OnFeedItemClickListener onFeedItemClickListener;
+    private OnItemClickListener onItemClickListener;
 
     private boolean showLoadingView = false;
 
-    public HutangAdapter(Context context) {
+    public CreditAdapter(List<Credit> credits, Context context) {
+        this.credits = credits;
         this.context = context;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_DEFAULT) {
-            View view = LayoutInflater.from(context).inflate(R.layout.item_feed, parent, false);
+            View view = LayoutInflater.from(context).inflate(R.layout.item_credit, parent, false);
             CellHutangViewHolder cellHutangViewHolder = new CellHutangViewHolder(view);
             setupClickableViews(view, cellHutangViewHolder);
             return cellHutangViewHolder;
@@ -56,41 +54,18 @@ public class HutangAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     private void setupClickableViews(final View view, final CellHutangViewHolder cellHutangViewHolder) {
-//        cellHutangViewHolder.btnComments.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                onFeedItemClickListener.onCommentsClick(view, cellHutangViewHolder.getAdapterPosition());
-//            }
-//        });
-//        cellHutangViewHolder.btnMore.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                onFeedItemClickListener.onMoreClick(v, cellHutangViewHolder.getAdapterPosition());
-//            }
-//        });
-//
-//        cellHutangViewHolder.btnLike.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                int adapterPosition = cellHutangViewHolder.getAdapterPosition();
-//                feedItems.get(adapterPosition).likesCount++;
-//                notifyItemChanged(adapterPosition, ACTION_LIKE_BUTTON_CLICKED);
-//                if (context instanceof MainActivity) {
-//                    ((MainActivity) context).showLikedSnackbar();
-//                }
-//            }
-//        });
-        cellHutangViewHolder.ivUserProfile.setOnClickListener(new View.OnClickListener() {
+        cellHutangViewHolder.btnBayar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onFeedItemClickListener.onProfileClick(view);
+                onItemClickListener.onBayarClick(v, cellHutangViewHolder.getAdapterPosition());
             }
         });
+
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        ((CellHutangViewHolder) viewHolder).bindView(feedItems.get(position));
+        ((CellHutangViewHolder) viewHolder).bindView(credits.get(position));
 
         if (getItemViewType(position) == VIEW_TYPE_LOADER) {
             bindLoadingFeedItem((LoadingCellHutangViewHolder) viewHolder);
@@ -119,29 +94,29 @@ public class HutangAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemCount() {
-        return feedItems.size();
+        return credits.size();
     }
 
     public void updateItems(boolean animated) {
-        feedItems.clear();
-        feedItems.addAll(Arrays.asList(
-                new FeedItem(33, false),
-                new FeedItem(1, false),
-                new FeedItem(223, false),
-                new FeedItem(2, false),
-                new FeedItem(6, false),
-                new FeedItem(8, false),
-                new FeedItem(99, false)
-        ));
+        credits.clear();
+//        credits.addAll(Arrays.asList(
+//                new FeedItem(33, false),
+//                new FeedItem(1, false),
+//                new FeedItem(223, false),
+//                new FeedItem(2, false),
+//                new FeedItem(6, false),
+//                new FeedItem(8, false),
+//                new FeedItem(99, false)
+//        ));
         if (animated) {
-            notifyItemRangeInserted(0, feedItems.size());
+            notifyItemRangeInserted(0, credits.size());
         } else {
             notifyDataSetChanged();
         }
     }
 
-    public void setOnFeedItemClickListener(OnFeedItemClickListener onFeedItemClickListener) {
-        this.onFeedItemClickListener = onFeedItemClickListener;
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
     }
 
     public void showLoadingView() {
@@ -154,20 +129,23 @@ public class HutangAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         @Bind(R.id.ivUserProfile)
         ImageView ivUserProfile;
 
+        @Bind(R.id.btnBayar)
+        Button btnBayar;
 
-        FeedItem feedItem;
+
+        Credit credit;
 
         public CellHutangViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }
 
-        public void bindView(FeedItem feedItem) {
-            this.feedItem = feedItem;
+        public void bindView(Credit credit) {
+            this.credit = credit;
         }
 
-        public FeedItem getFeedItem() {
-            return feedItem;
+        public Credit getCredit() {
+            return credit;
         }
     }
 
@@ -181,26 +159,15 @@ public class HutangAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
 
         @Override
-        public void bindView(FeedItem feedItem) {
-            super.bindView(feedItem);
+        public void bindView(Credit credit) {
+            super.bindView(credit);
         }
     }
 
-    public static class FeedItem {
-        public int likesCount;
-        public boolean isLiked;
 
-        public FeedItem(int likesCount, boolean isLiked) {
-            this.likesCount = likesCount;
-            this.isLiked = isLiked;
-        }
-    }
+    public interface OnItemClickListener {
 
-    public interface OnFeedItemClickListener {
-        void onCommentsClick(View v, int position);
+        void onBayarClick(View v, int position);
 
-        void onMoreClick(View v, int position);
-
-        void onProfileClick(View v);
     }
 }

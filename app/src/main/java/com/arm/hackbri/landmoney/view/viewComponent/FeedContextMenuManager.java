@@ -11,10 +11,8 @@ import android.view.animation.OvershootInterpolator;
 
 import com.arm.hackbri.landmoney.Utils;
 
-/**
- * Created by froger_mcs on 16.12.14.
- */
-public class FeedContextMenuManager extends RecyclerView.OnScrollListener implements View.OnAttachStateChangeListener {
+public class FeedContextMenuManager extends RecyclerView.OnScrollListener
+        implements View.OnAttachStateChangeListener {
 
     private static FeedContextMenuManager instance;
 
@@ -34,7 +32,8 @@ public class FeedContextMenuManager extends RecyclerView.OnScrollListener implem
 
     }
 
-public void toggleContextMenuFromView(View openingView, int feedItem, FeedContextMenu.OnFeedContextMenuItemClickListener listener) {
+public void toggleContextMenuFromView(View openingView, int feedItem,
+                                      FeedContextMenu.OnFeedContextMenuItemClickListener listener) {
     if (contextMenuView == null) {
         showContextMenuFromView(openingView, feedItem, listener);
     } else {
@@ -42,7 +41,11 @@ public void toggleContextMenuFromView(View openingView, int feedItem, FeedContex
     }
 }
 
-    private void showContextMenuFromView(final View openingView, int feedItem, FeedContextMenu.OnFeedContextMenuItemClickListener listener) {
+    private void showContextMenuFromView(
+            final View openingView,
+            int feedItem,
+            FeedContextMenu.OnFeedContextMenuItemClickListener listener) {
+
         if (!isContextMenuShowing) {
             isContextMenuShowing = true;
             contextMenuView = new FeedContextMenu(openingView.getContext());

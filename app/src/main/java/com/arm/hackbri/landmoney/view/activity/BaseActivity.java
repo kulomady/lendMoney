@@ -4,12 +4,12 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.widget.ImageView;
-
-import butterknife.ButterKnife;
-import butterknife.Bind;
+import android.widget.TextView;
 
 import com.arm.hackbri.landmoney.R;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -19,7 +19,7 @@ public class BaseActivity extends AppCompatActivity {
 
     @Nullable
     @Bind(R.id.ivLogo)
-    ImageView ivLogo;
+    TextView ivLogo;
 
 
     @Override
@@ -55,7 +55,7 @@ public class BaseActivity extends AppCompatActivity {
         return toolbar;
     }
 
-    public ImageView getIvLogo() {
+    public TextView getTitleText() {
         return ivLogo;
     }
 }

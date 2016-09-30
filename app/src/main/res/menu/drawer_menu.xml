@@ -1,16 +1,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:id="@+id/menu_group_1">
         <item
-            android:id="@+id/menu_feed"
+            android:id="@+id/menu_daftar_hutang"
             android:icon="@drawable/ic_global_menu_feed"
             android:title="Daftar Hutang" />
         <item
-            android:id="@+id/menu_direct"
+            android:id="@+id/menu_daftar_tagihan"
             android:icon="@drawable/ic_global_menu_direct"
             android:title="Daftar Tagihan" />
 
         <item
-            android:id="@+id/menu_popular"
+            android:id="@+id/menu_redeem"
             android:icon="@drawable/ic_global_menu_popular"
             android:title="Redeem" />
 
@@ -20,7 +20,7 @@
             android:id="@+id/menu_about"
             android:title="Tentang" />
         <item
-            android:id="@+id/menu_settings"
+            android:id="@+id/menu_logout"
             android:title="Keluar" />
     </group>
 </menu>
