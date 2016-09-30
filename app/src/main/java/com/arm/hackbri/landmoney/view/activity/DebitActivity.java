@@ -30,6 +30,8 @@ import android.widget.RadioGroup;
 import com.arm.hackbri.landmoney.R;
 import com.arm.hackbri.landmoney.Utils;
 import com.arm.hackbri.landmoney.model.response.Debit;
+import com.arm.hackbri.landmoney.presenter.DebitListPresenter;
+import com.arm.hackbri.landmoney.presenter.DebitListPresenterImpl;
 import com.arm.hackbri.landmoney.view.DebitListView;
 import com.arm.hackbri.landmoney.view.adapter.DebitAdapter;
 import com.arm.hackbri.landmoney.view.adapter.DebitItemAnimator;
@@ -59,13 +61,15 @@ public class DebitActivity extends BaseDrawerActivity implements DebitAdapter.On
     private DebitAdapter debitAdapter;
 
     private boolean pendingIntroAnimation;
+    private DebitListPresenter debitListPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_debit);
 
-
+        debitListPresenter = new DebitListPresenterImpl(this);
+        debitListPresenter.processFetchDebitList(this);
         if (savedInstanceState == null) {
             pendingIntroAnimation = true;
         } else {

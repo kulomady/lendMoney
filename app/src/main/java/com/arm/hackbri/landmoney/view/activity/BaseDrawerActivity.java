@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.arm.hackbri.landmoney.R;
 import com.arm.hackbri.landmoney.view.utils.CircleTransformation;
@@ -26,6 +27,11 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
     DrawerLayout drawerLayout;
     @Bind(R.id.vNavigation)
     NavigationView vNavigation;
+
+    TextView usernameText;
+
+    TextView saldoTextView;
+
 
     @BindDimen(R.dimen.global_menu_avatar_size)
     int avatarSize;
@@ -43,6 +49,7 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
         bindViews();
         setupHeader();
         vNavigation.setNavigationItemSelectedListener(this);
+
     }
 
     @Override
@@ -61,6 +68,8 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
     private void setupHeader() {
         View headerView = vNavigation.getHeaderView(0);
         ivMenuUserProfilePhoto = (ImageView) headerView.findViewById(R.id.ivMenuUserProfilePhoto);
+        saldoTextView = (TextView) headerView.findViewById(R.id.saldo);
+        usernameText = (TextView) headerView.findViewById(R.id.username);
         headerView.findViewById(R.id.vGlobalMenuHeader).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,7 +109,7 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
      */
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.menu_daftar_hutang:
                 final Intent intent = new Intent(this, CreditActivity.class);
                 int[] startingLocation = new int[2];
@@ -125,4 +134,11 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
         }
     }
 
+    protected void setSaldo(String saldo) {
+        saldoTextView.setText(saldo);
+    }
+
+    protected void setUsernameText(String username) {
+        usernameText.setText(username);
+    }
 }

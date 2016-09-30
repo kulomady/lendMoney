@@ -3,6 +3,7 @@ package com.arm.hackbri.landmoney.view.activity;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,6 +24,9 @@ import android.widget.RadioGroup;
 import com.arm.hackbri.landmoney.R;
 import com.arm.hackbri.landmoney.Utils;
 import com.arm.hackbri.landmoney.model.response.Credit;
+import com.arm.hackbri.landmoney.model.response.Profile;
+import com.arm.hackbri.landmoney.presenter.CreditListPresenter;
+import com.arm.hackbri.landmoney.presenter.CreditListPresenterImpl;
 import com.arm.hackbri.landmoney.view.CreditListView;
 import com.arm.hackbri.landmoney.view.adapter.CreditAdapter;
 import com.arm.hackbri.landmoney.view.adapter.CreditItemAnimator;
@@ -38,6 +42,7 @@ public class CreditActivity extends BaseDrawerActivity implements CreditAdapter.
         FeedContextMenu.OnFeedContextMenuItemClickListener, CreditListView {
     public static final String ACTION_SHOW_LOADING_ITEM = "action_show_loading_item";
 
+    private static final String PROFILE_INTENT_KEY = "profileKey";
     private static final int ANIM_DURATION_TOOLBAR = 300;
     private static final int ANIM_DURATION_FAB = 400;
 
@@ -52,19 +57,31 @@ public class CreditActivity extends BaseDrawerActivity implements CreditAdapter.
     ProgressBar creditProgressBar;
 
     private CreditAdapter creditAdapter;
+    private CreditListPresenter creditListPresenter;
+
+    private Profile profile;
 
     private boolean pendingIntroAnimation;
+    public static void openActivity(Activity openingActivity,Profile profile) {
+        Intent intent = new Intent(openingActivity, CreditActivity.class);
+        intent.putExtra(PROFILE_INTENT_KEY, profile);
+        openingActivity.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_credit);
-//        setupFeed();
 
+        profile = getIntent().getParcelableExtra(PROFILE_INTENT_KEY);
+        creditListPresenter = new CreditListPresenterImpl(this);
+        creditListPresenter.processFetchCreditList(this);
+
+        setSaldo("150.000");
         if (savedInstanceState == null) {
             pendingIntroAnimation = true;
         } else {
-            creditAdapter.updateItems(false);
+            if(creditAdapter!=null)creditAdapter.updateItems(false);
         }
     }
 
@@ -95,7 +112,7 @@ public class CreditActivity extends BaseDrawerActivity implements CreditAdapter.
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if (ACTION_SHOW_LOADING_ITEM.equals(intent.getAction())) {
-            showFeedLoadingItemDelayed();
+            if(creditAdapter!=null)showFeedLoadingItemDelayed();
         }
     }
 
