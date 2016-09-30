@@ -7,7 +7,9 @@ import com.arm.hackbri.landmoney.interactor.OnFetchDataListener;
 import com.arm.hackbri.landmoney.interactor.PreferencesInteractor;
 import com.arm.hackbri.landmoney.interactor.PreferencesInteractorImpl;
 import com.arm.hackbri.landmoney.model.ParamNetwork;
+import com.arm.hackbri.landmoney.model.response.Credit;
 import com.arm.hackbri.landmoney.model.response.Debit;
+import com.arm.hackbri.landmoney.model.response.Profile;
 import com.arm.hackbri.landmoney.network.exception.GeneralErrorException;
 import com.arm.hackbri.landmoney.network.exception.HttpErrorException;
 import com.arm.hackbri.landmoney.view.CreditListView;
@@ -35,9 +37,11 @@ public class CreditListPresenterImpl implements CreditListPresenter {
     @Override
     public void processFetchCreditList(Activity activity) {
         if (preferencesInteractor.isLogin(activity)) {
-            netInteractor.getDebitList(new ParamNetwork.Builder().put("", "").build(), new OnFetchDataListener<List<Debit>>() {
+            Profile profile = preferencesInteractor.getUserData(activity);
+            netInteractor.getCreditList(new ParamNetwork.Builder().put("user_id", profile.getUserId() + "")
+                    .build(), new OnFetchDataListener<List<Credit>>() {
                 @Override
-                public void onSuccessFetchData(List<Debit> debitList) {
+                public void onSuccessFetchData(List<Credit> debitList) {
                     viewListener.renderCreditListDatas(debitList);
                 }
 
