@@ -70,7 +70,7 @@ public class DebitAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         cellHutangViewHolder.btnBayar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onDebitClickListener.onBayarClick(v, cellHutangViewHolder.getAdapterPosition());
+                onDebitClickListener.onBayarClick(v, cellHutangViewHolder.getAdapterPosition(), debits.get(cellHutangViewHolder.getAdapterPosition()).getDebtId());
             }
         });
     }
@@ -86,10 +86,41 @@ public class DebitAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
     }
 
-    private void bindItemDebit(CellHutangViewHolder viewHolder, Debit debit) {
+    private void bindItemDebit(CellHutangViewHolder viewHolder, final Debit debit) {
         viewHolder.tvName.setText(debit.getUserName());
         viewHolder.tvAmount.setText("Rp. " + NumberFormat.getNumberInstance(Locale.US).format(debit.getDebtAmt()));
         viewHolder.tvDesc.setText(debit.getDebtDesc());
+        viewHolder.tvType.setText(debit.getUserType());
+
+//        switch (debit.getStatus()) {
+//            case Debit.STATUS_COMPLETED:
+//                viewHolder.btnBayar.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        onDebitClickListener.onBayarClick();
+//                    }
+//                });
+//                break;
+//            case Debit.STATUS_PENDING:
+//                break;
+//            case Debit.STATUS_UNPAID:
+//                break;
+//        }
+//        viewHolder.btnBayar.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                switch (debit.getStatus()) {
+//                    case Debit.STATUS_COMPLETED:
+//
+//                        break;
+//                    case Debit.STATUS_PENDING:
+//                        break;
+//                    case Debit.STATUS_UNPAID:
+//                        break;
+//                }
+//            }
+//        });
     }
 
     private void bindLoadingFeedItem(final LoadingCellHutangViewHolder holder) {
@@ -160,7 +191,8 @@ public class DebitAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         @Bind(R.id.tvAmount)
         TextView tvAmount;
-
+        @Bind(R.id.type)
+        TextView tvType;
         Debit debit;
 
         public CellHutangViewHolder(View view) {
@@ -193,7 +225,8 @@ public class DebitAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     public interface OnDebitClickListener {
-        void onBayarClick(View v, int position);
+        void onBayarClick(View v, int position, String debtId);
+
 
     }
 }

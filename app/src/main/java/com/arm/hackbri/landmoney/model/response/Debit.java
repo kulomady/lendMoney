@@ -12,9 +12,9 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class Debit implements Parcelable {
-    public static int STATUS_PENDING = -1;
-    public static int STATUS_COMPLETED = 0;
-    public static int STATUS_UNPAID = 1;
+    public final static int STATUS_PENDING = -1;
+    public final static int STATUS_COMPLETED = 0;
+    public final static int STATUS_UNPAID = 1;
 
     @SerializedName("user_id")
     @Expose
@@ -34,6 +34,20 @@ public class Debit implements Parcelable {
     @SerializedName("debt_desc")
     @Expose
     private String debtDesc;
+    @SerializedName("debt_id")
+    @Expose
+    private String debtId;
+    @SerializedName("user_type")
+    @Expose
+    private String userType;
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
 
     public String getUserId() {
         return userId;
@@ -83,6 +97,16 @@ public class Debit implements Parcelable {
         this.debtDesc = debtDesc;
     }
 
+    public String getDebtId() {
+        return debtId;
+    }
+
+    public void setDebtId(String debtId) {
+        this.debtId = debtId;
+    }
+
+    public Debit() {
+    }
 
     @Override
     public int describeContents() {
@@ -97,9 +121,8 @@ public class Debit implements Parcelable {
         dest.writeValue(this.status);
         dest.writeValue(this.debtAmt);
         dest.writeString(this.debtDesc);
-    }
-
-    public Debit() {
+        dest.writeString(this.debtId);
+        dest.writeString(this.userType);
     }
 
     protected Debit(Parcel in) {
@@ -109,9 +132,11 @@ public class Debit implements Parcelable {
         this.status = (Integer) in.readValue(Integer.class.getClassLoader());
         this.debtAmt = (Integer) in.readValue(Integer.class.getClassLoader());
         this.debtDesc = in.readString();
+        this.debtId = in.readString();
+        this.userType = in.readString();
     }
 
-    public static final Parcelable.Creator<Debit> CREATOR = new Parcelable.Creator<Debit>() {
+    public static final Creator<Debit> CREATOR = new Creator<Debit>() {
         @Override
         public Debit createFromParcel(Parcel source) {
             return new Debit(source);

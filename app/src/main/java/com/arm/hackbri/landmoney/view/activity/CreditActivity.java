@@ -37,6 +37,8 @@ import com.arm.hackbri.landmoney.model.response.Credit;
 import com.arm.hackbri.landmoney.model.response.Invite;
 import com.arm.hackbri.landmoney.model.response.Profile;
 import com.arm.hackbri.landmoney.model.response.TBankSaldo;
+import com.arm.hackbri.landmoney.network.exception.GeneralErrorException;
+import com.arm.hackbri.landmoney.network.exception.HttpErrorException;
 import com.arm.hackbri.landmoney.presenter.CreditListPresenter;
 import com.arm.hackbri.landmoney.presenter.CreditListPresenterImpl;
 import com.arm.hackbri.landmoney.view.CreditListView;
@@ -45,6 +47,8 @@ import com.arm.hackbri.landmoney.view.adapter.CreditItemAnimator;
 import com.arm.hackbri.landmoney.view.viewComponent.FeedContextMenu;
 import com.arm.hackbri.landmoney.view.viewComponent.FeedContextMenuManager;
 
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.List;
 
 import butterknife.Bind;
@@ -76,6 +80,7 @@ public class CreditActivity extends BaseDrawerActivity implements CreditAdapter.
     private PreferencesInteractor preferencesInteractor;
 
     private boolean pendingIntroAnimation;
+
     public static void openActivity(Activity openingActivity) {
         Intent intent = new Intent(openingActivity, CreditActivity.class);
 
@@ -99,7 +104,7 @@ public class CreditActivity extends BaseDrawerActivity implements CreditAdapter.
         if (savedInstanceState == null) {
             pendingIntroAnimation = true;
         } else {
-            if(creditAdapter!=null)creditAdapter.updateItems(false);
+            if (creditAdapter != null) creditAdapter.updateItems(false);
         }
     }
 
@@ -130,7 +135,7 @@ public class CreditActivity extends BaseDrawerActivity implements CreditAdapter.
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if (ACTION_SHOW_LOADING_ITEM.equals(intent.getAction())) {
-            if(creditAdapter!=null)showFeedLoadingItemDelayed();
+            if (creditAdapter != null) showFeedLoadingItemDelayed();
         }
     }
 
@@ -219,14 +224,14 @@ public class CreditActivity extends BaseDrawerActivity implements CreditAdapter.
         int[] startingLocation = new int[2];
         fabCreate.getLocationOnScreen(startingLocation);
         startingLocation[0] += fabCreate.getWidth() / 2;
-        CreateCreditActivity.openWithPhotoUri(this,profile);
+        CreateCreditActivity.openWithPhotoUri(this, profile);
         overridePendingTransition(0, 0);
     }
 
 
     @Override
-    public void onBayarClick(View v, int position,String debt_id) {
-       showPaymentDialog(debt_id);
+    public void onBayarClick(View v, int position, String debt_id) {
+        showPaymentDialog(debt_id);
     }
 
     void showPaymentDialog(final String debt_id) {
@@ -248,6 +253,10 @@ public class CreditActivity extends BaseDrawerActivity implements CreditAdapter.
         dialog.show();
     }
 
+    private String replacePrefix(String string) {
+        return string.replaceFirst("0", "62");
+    }
+
     private void processTransfer(String debt_id) {
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Transferring");
@@ -265,6 +274,17 @@ public class CreditActivity extends BaseDrawerActivity implements CreditAdapter.
             @Override
             public void onFailedFetchData(Throwable throwable) {
                 progressDialog.dismiss();
+                if (throwable instanceof SocketTimeoutException) {
+                    renderErrorConnection("Server timeout, silahkan coba kembali");
+                } else if (throwable instanceof UnknownHostException) {
+                    renderErrorConnection("Tidak ada internet, Silahkan coba kembali");
+                } else if (throwable instanceof HttpErrorException) {
+                    renderErrorUnknown(throwable.getMessage());
+                } else if (throwable instanceof GeneralErrorException) {
+                    renderErrorUnknown(throwable.getMessage());
+                } else {
+                    renderErrorUnknown(throwable.getMessage());
+                }
             }
         });
     }
@@ -360,12 +380,12 @@ public class CreditActivity extends BaseDrawerActivity implements CreditAdapter.
     private void showDialogInvite() {
         final NetworkInteractor interactor = new NetworkInteractorImpl();
         final ParamNetwork.Builder paramNetwork = new ParamNetwork.Builder();
-        paramNetwork.put("user_phone",phoneValue);
+        paramNetwork.put("user_phone", phoneValue);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder
                 .setMessage("User ini belum terdafar apakah mau mengundangnya ")
-                .setPositiveButton("Yes",  new DialogInterface.OnClickListener() {
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
@@ -374,7 +394,7 @@ public class CreditActivity extends BaseDrawerActivity implements CreditAdapter.
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog,int id) {
+                    public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
                 })
