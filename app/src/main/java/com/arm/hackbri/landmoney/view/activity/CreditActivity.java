@@ -34,6 +34,7 @@ import com.arm.hackbri.landmoney.interactor.PreferencesInteractor;
 import com.arm.hackbri.landmoney.interactor.PreferencesInteractorImpl;
 import com.arm.hackbri.landmoney.model.ParamNetwork;
 import com.arm.hackbri.landmoney.model.response.Credit;
+import com.arm.hackbri.landmoney.model.response.Invite;
 import com.arm.hackbri.landmoney.model.response.Profile;
 import com.arm.hackbri.landmoney.model.response.TBankSaldo;
 import com.arm.hackbri.landmoney.presenter.CreditListPresenter;
@@ -357,6 +358,9 @@ public class CreditActivity extends BaseDrawerActivity implements CreditAdapter.
     }
 
     private void showDialogInvite() {
+        final NetworkInteractor interactor = new NetworkInteractorImpl();
+        final ParamNetwork.Builder paramNetwork = new ParamNetwork.Builder();
+        paramNetwork.put("user_phone",phoneValue);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder
@@ -364,7 +368,8 @@ public class CreditActivity extends BaseDrawerActivity implements CreditAdapter.
                 .setPositiveButton("Yes",  new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        // Yes-code
+                        dialog.dismiss();
+                        prosessInvite(interactor, paramNetwork);
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -375,5 +380,22 @@ public class CreditActivity extends BaseDrawerActivity implements CreditAdapter.
                 })
                 .show();
 
+    }
+
+    private void prosessInvite(NetworkInteractor interactor, ParamNetwork.Builder paramNetwork) {
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading");
+        progressDialog.show();
+        interactor.invite(paramNetwork.build(), new OnFetchDataListener<Invite>() {
+            @Override
+            public void onSuccessFetchData(Invite data) {
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailedFetchData(Throwable throwable) {
+                progressDialog.dismiss();
+            }
+        });
     }
 }
