@@ -316,9 +316,9 @@ public class NetworkInteractorImpl implements NetworkInteractor {
     @Override
     public void transfer(final ParamNetwork paramNetwork, final OnFetchDataListener<TBankSaldo> onFetchDataListener) {
         compositeSubscription.add(LMService.getInstance().getApi().transfer(paramNetwork.getParamMap())
-                .flatMap(new Func1<Response, Observable<LMResponse>>() {
+                .flatMap(new Func1<Response<String>, Observable<LMResponse>>() {
                     @Override
-                    public Observable<LMResponse> call(Response response) {
+                    public Observable<LMResponse> call(Response<String> response) {
                         if (response.isSuccess()) {
                             return LMService.getInstance().getApi().getTBankSaldo(paramNetwork.getParamMap());
                         } else {

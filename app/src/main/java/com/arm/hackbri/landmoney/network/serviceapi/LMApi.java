@@ -30,7 +30,7 @@ public interface LMApi {
 
     @FormUrlEncoded
     @POST(LMEndpointURL.PATH_TRANSFER)
-    Observable<Response> transfer(@FieldMap Map<String, String> params);
+    Observable<Response<String>> transfer(@FieldMap Map<String, String> params);
 
     @FormUrlEncoded
     @POST(LMEndpointURL.PATH_GET_TBANK_SALDO)
@@ -74,7 +74,7 @@ public interface LMApi {
 
     @FormUrlEncoded
     @POST(LMEndpointURL.PATH_FCM_TOKEN)
-    Observable<Response> postFCMToken(@FieldMap Map<String, String> params);
+    Observable<Response<String>> postFCMToken(@FieldMap Map<String, String> params);
 
     @FormUrlEncoded
     @POST(LMEndpointURL.PATH_BILL)
