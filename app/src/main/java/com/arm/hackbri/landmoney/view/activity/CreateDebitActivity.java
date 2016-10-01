@@ -36,8 +36,10 @@ public class CreateDebitActivity extends BaseActivity implements CreateDebitView
     TextView taskCreateDebit;
     @Bind(R.id.input_amount)
     EditText edtAmount;
-    @Bind(R.id.input_phonenumber)
+    @Bind(R.id.input_phone)
     EditText edtPhoneNumber;
+    @Bind(R.id.input_desc)
+    EditText edtDesc;
 
     private String phoneValue;
     private Profile profileTarget;
@@ -125,7 +127,7 @@ public class CreateDebitActivity extends BaseActivity implements CreateDebitView
 
     @Override
     public String getDescription() {
-        return null;
+        return edtDesc.getText().toString();
     }
 
     @Override
