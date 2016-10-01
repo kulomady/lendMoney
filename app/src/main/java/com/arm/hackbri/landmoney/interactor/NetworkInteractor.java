@@ -2,13 +2,13 @@ package com.arm.hackbri.landmoney.interactor;
 
 import com.arm.hackbri.landmoney.model.ParamNetwork;
 import com.arm.hackbri.landmoney.model.response.AcceptDebit;
+import com.arm.hackbri.landmoney.model.response.BillCredit;
 import com.arm.hackbri.landmoney.model.response.CreateDebitCredit;
 import com.arm.hackbri.landmoney.model.response.Credit;
 import com.arm.hackbri.landmoney.model.response.Debit;
 import com.arm.hackbri.landmoney.model.response.Invite;
 import com.arm.hackbri.landmoney.model.response.Profile;
 import com.arm.hackbri.landmoney.model.response.TBankSaldo;
-import com.arm.hackbri.landmoney.view.CreateCreditView;
 
 import java.util.List;
 
@@ -43,6 +43,7 @@ public interface NetworkInteractor {
 
     void postFCMToken(ParamNetwork paramNetwork);
 
+    void billCredit(ParamNetwork paramNetwork, OnFetchDataListener<BillCredit> onFetchDataListener);
 
     void getListRedeem(ParamNetwork paramNetwork, OnFetchDataListener<?> onFetchDataListener);
 

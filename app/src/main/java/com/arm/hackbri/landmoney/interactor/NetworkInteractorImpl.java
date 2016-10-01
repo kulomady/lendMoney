@@ -2,6 +2,7 @@ package com.arm.hackbri.landmoney.interactor;
 
 import com.arm.hackbri.landmoney.model.ParamNetwork;
 import com.arm.hackbri.landmoney.model.response.AcceptDebit;
+import com.arm.hackbri.landmoney.model.response.BillCredit;
 import com.arm.hackbri.landmoney.model.response.CreateDebitCredit;
 import com.arm.hackbri.landmoney.model.response.Credit;
 import com.arm.hackbri.landmoney.model.response.Debit;
@@ -401,6 +402,36 @@ public class NetworkInteractorImpl implements NetworkInteractor {
                 .unsubscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe());
+    }
+
+    @Override
+    public void billCredit(ParamNetwork paramNetwork, final OnFetchDataListener<BillCredit> onFetchDataListener) {
+        compositeSubscription.add(LMService.getInstance().getApi().bill(paramNetwork.getParamMap())
+                .subscribeOn(Schedulers.newThread())
+                .unsubscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<LMResponse>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        onFetchDataListener.onFailedFetchData(e);
+                    }
+
+                    @Override
+                    public void onNext(LMResponse lmResponse) {
+                        BillCredit result = lmResponse.convertDataObj(BillCredit.class);
+                        if (result.getSuccess() == 1) {
+                            onFetchDataListener.onSuccessFetchData(result);
+                        } else {
+                            onFetchDataListener.onFailedFetchData(new GeneralErrorException("Penagihan gagal, ulangi lagi"));
+                        }
+
+                    }
+                }));
     }
 
 
