@@ -34,6 +34,17 @@ public class Credit implements Parcelable {
     @SerializedName("credit_desc")
     @Expose
     private String creditDesc;
+    @SerializedName("user_type")
+    @Expose
+    private String userType;
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
 
     public String getUserId() {
         return userId;
@@ -84,6 +95,9 @@ public class Credit implements Parcelable {
     }
 
 
+    public Credit() {
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -97,9 +111,7 @@ public class Credit implements Parcelable {
         dest.writeValue(this.status);
         dest.writeValue(this.creditAmt);
         dest.writeString(this.creditDesc);
-    }
-
-    public Credit() {
+        dest.writeString(this.userType);
     }
 
     protected Credit(Parcel in) {
@@ -109,9 +121,10 @@ public class Credit implements Parcelable {
         this.status = (Integer) in.readValue(Integer.class.getClassLoader());
         this.creditAmt = (Integer) in.readValue(Integer.class.getClassLoader());
         this.creditDesc = in.readString();
+        this.userType = in.readString();
     }
 
-    public static final Parcelable.Creator<Credit> CREATOR = new Parcelable.Creator<Credit>() {
+    public static final Creator<Credit> CREATOR = new Creator<Credit>() {
         @Override
         public Credit createFromParcel(Parcel source) {
             return new Credit(source);

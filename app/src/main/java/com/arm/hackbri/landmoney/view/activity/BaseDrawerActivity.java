@@ -110,14 +110,14 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_daftar_hutang:
+            case R.id.menu_daftar_tagihan:
                 final Intent intent = new Intent(this, CreditActivity.class);
                 int[] startingLocation = new int[2];
 //                intent.putExtra(CommentsActivity.ARG_DRAWING_START_LOCATION, startingLocation[1]);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
                 break;
-            case R.id.menu_daftar_tagihan:
+            case R.id.menu_daftar_hutang:
                 final Intent intent1 = new Intent(this, DebitActivity.class);
                 startActivity(intent1);
                 overridePendingTransition(0, 0);

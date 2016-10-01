@@ -39,6 +39,9 @@ import com.arm.hackbri.landmoney.interactor.OnFetchDataListener;
 import com.arm.hackbri.landmoney.model.ParamNetwork;
 import com.arm.hackbri.landmoney.model.response.Debit;
 import com.arm.hackbri.landmoney.model.response.Profile;
+import com.arm.hackbri.landmoney.model.response.TBankSaldo;
+import com.arm.hackbri.landmoney.network.exception.GeneralErrorException;
+import com.arm.hackbri.landmoney.network.exception.HttpErrorException;
 import com.arm.hackbri.landmoney.presenter.DebitListPresenter;
 import com.arm.hackbri.landmoney.presenter.DebitListPresenterImpl;
 import com.arm.hackbri.landmoney.view.DebitListView;
@@ -46,6 +49,8 @@ import com.arm.hackbri.landmoney.view.adapter.DebitAdapter;
 import com.arm.hackbri.landmoney.view.adapter.DebitItemAnimator;
 import com.arm.hackbri.landmoney.view.viewComponent.FeedContextMenuManager;
 
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.List;
 
 import butterknife.Bind;
@@ -86,7 +91,6 @@ public class DebitActivity extends BaseDrawerActivity implements DebitAdapter.On
             debitAdapter.updateItems(false);
         }
     }
-
 
 
     @Override
@@ -153,11 +157,6 @@ public class DebitActivity extends BaseDrawerActivity implements DebitAdapter.On
     }
 
 
-    @Override
-    public void onBayarClick(View v, int itemPosition) {
-        showPaymentDialog();
-    }
-
     @OnClick(R.id.btnBuatTagihan)
     public void onTakePhotoClick() {
         showCreateDebitDialog();
@@ -167,11 +166,11 @@ public class DebitActivity extends BaseDrawerActivity implements DebitAdapter.On
         int[] startingLocation = new int[2];
         fabCreate.getLocationOnScreen(startingLocation);
         startingLocation[0] += fabCreate.getWidth() / 2;
-        CreateDebitActivity.openActivity(this,profileTarget);
+        CreateDebitActivity.openActivity(this, profileTarget);
         overridePendingTransition(0, 0);
     }
 
-    void showPaymentDialog() {
+    void showPaymentDialog(final String debt_id) {
 
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -183,10 +182,43 @@ public class DebitActivity extends BaseDrawerActivity implements DebitAdapter.On
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
+                processTransfer(debt_id);
             }
         });
 
         dialog.show();
+    }
+
+    private void processTransfer(String debt_id) {
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Transferring");
+        progressDialog.show();
+        NetworkInteractor networkInteractor = new NetworkInteractorImpl();
+        ParamNetwork.Builder builder = new ParamNetwork.Builder();
+        builder.put("debt_id", debt_id);
+        networkInteractor.transfer(builder.build(), new OnFetchDataListener<TBankSaldo>() {
+            @Override
+            public void onSuccessFetchData(TBankSaldo data) {
+                progressDialog.dismiss();
+                debitListPresenter.processFetchDebitList(DebitActivity.this);
+            }
+
+            @Override
+            public void onFailedFetchData(Throwable throwable) {
+                progressDialog.dismiss();
+                if (throwable instanceof SocketTimeoutException) {
+                    renderErrorConnection("Server timeout, silahkan coba kembali");
+                } else if (throwable instanceof UnknownHostException) {
+                    renderErrorConnection("Tidak ada internet, Silahkan coba kembali");
+                } else if (throwable instanceof HttpErrorException) {
+                    renderErrorUnknown(throwable.getMessage());
+                } else if (throwable instanceof GeneralErrorException) {
+                    renderErrorUnknown(throwable.getMessage());
+                } else {
+                    renderErrorUnknown(throwable.getMessage());
+                }
+            }
+        });
     }
 
     @Override
@@ -241,7 +273,7 @@ public class DebitActivity extends BaseDrawerActivity implements DebitAdapter.On
         };
         rvFeed.setLayoutManager(linearLayoutManager);
 
-        debitAdapter = new DebitAdapter(this,debits);
+        debitAdapter = new DebitAdapter(this, debits);
         debitAdapter.setOnDebitClickListener(this);
         rvFeed.setAdapter(debitAdapter);
         rvFeed.setOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -305,7 +337,7 @@ public class DebitActivity extends BaseDrawerActivity implements DebitAdapter.On
 
         builder
                 .setMessage("User ini belum terdafar apakah mau mengundangnya ")
-                .setPositiveButton("Yes",  new DialogInterface.OnClickListener() {
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         // Yes-code
@@ -313,11 +345,16 @@ public class DebitActivity extends BaseDrawerActivity implements DebitAdapter.On
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog,int id) {
+                    public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
                 })
                 .show();
 
+    }
+
+    @Override
+    public void onBayarClick(View v, int position, String debtId) {
+        showPaymentDialog(debtId);
     }
 }

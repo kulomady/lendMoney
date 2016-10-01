@@ -61,7 +61,7 @@ public class CreditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             @Override
             public void onClick(View v) {
                 Credit credit = credits.get(cellHutangViewHolder.getAdapterPosition());
-                onItemClickListener.onBayarClick(v, cellHutangViewHolder.getAdapterPosition(),credit.getUserId());
+                onItemClickListener.onBayarClick(v, cellHutangViewHolder.getAdapterPosition(), credit.getUserId());
             }
         });
 
@@ -95,6 +95,7 @@ public class CreditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         viewHolder.tvName.setText(credit.getUserName());
         viewHolder.tvAmount.setText("Rp. " + NumberFormat.getNumberInstance(Locale.US).format(credit.getCreditAmt()));
         viewHolder.tvDesc.setText(credit.getCreditDesc());
+        viewHolder.tvType.setText(credit.getUserType());
     }
 
     @Override
@@ -147,6 +148,9 @@ public class CreditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         @Bind(R.id.amount)
         TextView tvAmount;
 
+        @Bind(R.id.type)
+        TextView tvType;
+
         Credit credit;
 
         public CellHutangViewHolder(View view) {
@@ -181,7 +185,7 @@ public class CreditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     public interface OnItemClickListener {
 
-        void onBayarClick(View v, int position,String debtId);
+        void onBayarClick(View v, int position, String debtId);
 
     }
 }
