@@ -28,7 +28,7 @@ import butterknife.OnClick;
 
 public class LoginActivity extends Activity implements LoginView {
 
-    @Bind(R.id.input_phonenumber)
+    @Bind(R.id.input_phone)
     EditText edtPhone;
     @Bind(R.id.input_password)
     EditText edtPassword;

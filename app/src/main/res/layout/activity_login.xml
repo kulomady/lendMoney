@@ -34,7 +34,7 @@
 
         <EditText
             android:text="085747212168"
-            android:id="@+id/input_phonenumber"
+            android:id="@+id/input_phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:singleLine="true"

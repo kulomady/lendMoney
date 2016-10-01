@@ -30,11 +30,14 @@ public class CreateCreditActivity extends BaseActivity implements CreateCreditVi
 
     @Bind(R.id.input_amount)
     EditText edtAmount;
-    @Bind(R.id.input_phonenumber)
-    EditText edtPhoneNumber;
+    @Bind(R.id.input_phone)
+    EditText edtPhone;
     @Bind(R.id.rg_payment_method)
     RadioGroup rgPaymentMethod;
     PreferencesInteractor preferencesInteractor;
+
+    @Bind(R.id.input_desc)
+    EditText edtDesc;
 
     private CreateCreditPresenter createCreditPresenter;
     private static final String PROFILE_KEY="profileKey";
@@ -101,7 +104,7 @@ public class CreateCreditActivity extends BaseActivity implements CreateCreditVi
 
     @Override
     public String getPhoneNumber() {
-        return edtPhoneNumber.getText().toString();
+        return edtPhone.getText().toString();
     }
 
     @Override
@@ -111,7 +114,7 @@ public class CreateCreditActivity extends BaseActivity implements CreateCreditVi
 
     @Override
     public String getDescription() {
-        return null;
+        return edtDesc.getText().toString();
     }
 
     @OnClick(R.id.btnSubmit)
